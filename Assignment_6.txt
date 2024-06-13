@@ -1,0 +1,111 @@
+[root@centos Assignment_6]# vim task1.sh
+#!/bin/bash
+
+date=$(date +%Y-%m%d)
+if [ ! -d "/backup" ]; then
+        mkdir -p /backup
+fi
+
+tar -czvf /backup/data_$date\.tar.gz /home/user/data
+echo "Backup of /home/user/data to /backup/data_$data\.tar.gz complete."
+~
+~
+:wq
+
+[root@centos Assignment_6]# bash task1.sh
+Backup of /home/user/data to /backup/data_$data\.tar.gz complete.
+
+
+=============================================================================
+
+
+[root@centos Assignment_6]# vim task2.sh
+
+#!/bin/bash
+
+hostname=$(hostname)
+os=$(cat /etc/os-release | grep "^NAME" | cut -f 2 -d "=" | tr -d '"')
+kernel=$(uname -r)
+processor=$(lscpu | grep 'Model name' | cut -f 2 -d ":" | awk '{$1=$1}1')
+architecture=$(arch)
+memory=$(free -h | grep "Mem" | awk '{print $2}')
+swap=$(free -h | grep "Swap" | awk '{print $2}')
+uptime=$(uptime | awk '{print $1}')
+
+echo "+--------------------------------+
+        $ bash sys_info
++--------------------------------+
+ Hostname       : $hostname
+ OS             : $os
+ Kernel         : $kernel
+ Processor Name : $processor
+ Architecture   : $architecture
+ Memory         : $memory
+ Swap Memory    : $swap
+ Uptime         : $uptime"
+~
+~
+:wq
+
+[root@centos Assignment_6]# bash task2.sh
++--------------------------------+
+        $ bash sys_info
++--------------------------------+
+ Hostname       : centos.cdac
+ OS             : CentOS Linux
+ Kernel         : 3.10.0-1160.el7.x86_64
+ Processor Name : 12th Gen Intel(R) Core(TM) i9-12900H
+ Architecture   : x86_64
+ Memory         : 3.7G
+ Swap Memory    : 8.0G
+ Uptime         : 23:26:56
+[root@centos Assignment_6]#
+
+=============================================================================
+
+[root@centos Assignment_6]# vim task3.sh
+
+#!/bin/bash
+echo "Entered file name is $1"
+
+# starting line from user
+echo "Entered starting line is $2"
+
+# ending line from user
+echo "Entered ending line is $3"
+
+# printing the specified lines to console.
+sed -n $2,$3\p $1
+[root@centos Assignment_6]# bash task3.sh
+
+=============================================================================
+
+[root@centos Assignment_6]# vim task4.sh
+
+#!/bin/bash
+
+status=$(getenforce)
+echo "Status of SELinux is $status"
+if [ $status = "Enforcing" ]; then
+        read -p "Do you want to change SELinux status to Permissive (Y/N)" ch
+        if [[ $ch == [yY] ]]; then
+                $status=$(setenforce 0)
+                echo "Status of SELinux Changed to $status"
+        fi
+else
+        read -p "Do you want to change SELinux status to Enforcing (Y/N): " ch
+        if [[ $ch == [yY] ]]; then
+                $status=$(setenforce 1)
+                echo "Status of SELinux Changed to $status"
+        fi
+fi
+~                                                                                                      
+~
+:wq 
+
+[root@centos Assignment_6]# bash task4.sh
+Status of SELinux is Enforcing
+Do you want to change SELinux status to Permissive (Y/N): y
+task4.sh: line 8: Enforcing=: command not found
+Status of SELinux Changed to Enforcing
+[root@centos Assignment_6]#

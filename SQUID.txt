@@ -1,0 +1,111 @@
+squid
+-----\
+Squid is caching and forwarding HTTP web proxy. Which is used to speed up a web server by caching repeated requests, caching web, DNS and filtering traffic.
+
+
+
+# yum install squid* -y
+# systemctl restart squid
+
+# squid -v
+# vim /etc/squid/squid.conf
+------\
+
+
++++Allow local network
+
+# vim /etc/squid/squid.conf
+
+acl localnet src 192.168.1.254/24
+http_access allow localnet
+
+OR
+
+acl localnet src 192.168.1.0/24
+http_access allow localnet
+
+-------\
+
+
+Go to browser and set proxy manually: curl -x squid-proxy-server-IP>:3128  -L http://google.com
+
+
+-------\
++++++ check logs 
+
+# tail -f /var/log/squid/access.log
+-------\
+
+We will block domains such as facebook.com and youtube.com
+
+# vim /etc/squid/squid.conf 
+add lines:
+``````````
+acl blocksite1 dstdomain www.facebook.com
+acl blocksite2 dstdomain www.youtube.com
+http_access deny blocksite1
+http_access deny blocksite2
+
+
++++++ If you want to block specific website then make the entry of blockedsites 
+
+# cat > /etc/squid/blockedsites.squid
+.tesla.com
+.gmail.com
+.cdac.in
+
+
+#vim /etc/squid/squid.conf 
+acl blocksites dstdomain "/etc/squid/blockedsites.squid"
+http_access deny blocksites
+
+
+OR
+
+acl blocksites url_regex "/etc/squid/blockedsites.squid"
+http_access deny blocksites
+
+
+
+
+#systemctl restart squid.service
+-------\
+
+
+
++++++ Block specific words
+
+# vim /etc/squid/ban_keywords.txt
+gambling
+spyware
+bad
+:wq
+
+# vim /etc/squid/squid.conf
+acl bad_keywords  url_regex "/etc/squid/ban_keywords.txt"
+http_access deny bad_keywords
+
+#systemctl restart squid.service
+
+------/
+
+++++++ You can also block files
+# vim /etc/squid/blockfiles.squid
+\.torrent$
+\.mp3.*$
+\.m3u8.*$
+\.mp4.*$
+
+# vim /etc/squid/squid.conf
+acl blockfiles urlpath_regex "/etc/squid/blockfiles.squid"
+http_access deny blockfiles
+
+-------\
+++++++ Set working hours
+#vim /etc/squid/squid.conf
+acl working_hours time 10:00-17:00
+http_access deny working_hours
+------------
+
+
+

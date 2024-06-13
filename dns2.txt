@@ -1,0 +1,59 @@
+Addresses 192.168.20.1/24<Remove>                
+192.168.20.2/24 <Remove>                 
+192.168.20.3/24__________ <Remove>                
+<Add...>                                           
+Gateway 192.168.25.2                       
+DNS servers
+192.168.20.1<Remove>
+192.168.25.2<Remove>
+example.lab<Remove>     
+
+[root@master ~]# vim /etv/named.conf
+[root@master ~]# vim /etc/named.conf
+[root@master ~]# nmtui
+[root@master ~]# vim /etc/named.conf
+[root@master ~]# cad /var/named
+bash: cad: command not found...
+[root@master ~]# cd /var/named
+[root@master named]# ls
+data     for.ketan.com   named.ca     named.localhost  rev.sniper.com
+dynamic  for.sniper.com  named.empty  named.loopback   slaves
+[root@master named]# cp -av for.sniper.com for.example.com
+‘for.sniper.com’ -> ‘for.example.com’
+[root@master named]# cim for.example.com
+bash: cim: command not found...
+[root@master named]# vim for.example.com
+[root@master named]# cp -av rev.sniper.com rev.example.com
+‘rev.sniper.com’ -> ‘rev.example.com’
+[root@master named]# vim rev.example.com
+[root@master named]# vim for.example.com
+[root@master named]# vim rev.example.com
+[root@master named]# systemctl restart named
+[root@master named]# systemctl restart named
+[root@master named]# systemctl status named
+
+
+$TTL 1D
+@       IN SOA  www.example.com. user@gmail.com. (
+                                        0       ; serial
+                                        1D      ; refresh
+                                        1H      ; retry
+                                        1W      ; expire
+                                        3H )    ; mi                   
+@                       IN      NS      www.example.com.
+www.example.com.        IN      A       192.168.20.1
+mail                    IN      A       192.168.20.2
+student                 IN      A       192.168.20.3     
+
+$TTL 1D
+@       IN SOA  www.example.com. @ (
+                                        0       ; serial
+                                        1D      ; refresh
+                                        1H      ; retry
+                                        1W      ; expire
+                                        3H )    ; mini
+@       IN      NS      www.example.com.
+1       IN      PTR     www.example.lab
+2       IN      PTR     mail
+3       IN      PTR     student
+                                                           

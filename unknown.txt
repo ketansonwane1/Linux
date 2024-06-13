@@ -1,0 +1,359 @@
+
+
+
+
+
+
+
+
+
+[root@master ~]# vim /etc/named.conf
+[root@master ~]# clear
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[root@master ~]# nmtui
+[root@master ~]# vim /etc/named.conf
+[root@master ~]# cd /var/named
+[root@master named]# cp -av named.localhost for.sniper.com
+‘named.localhost’ -> ‘for.sniper.com’
+[root@master named]# vim for.sniper.com
+[root@master named]# vim rev.sniper.com
+[root@master named]# cp -av named.localhost rev.sniper.com
+‘named.localhost’ -> ‘rev.sniper.com’
+[root@master named]# vim rev.sniper.com
+[root@master named]# systemctl restart named
+Job for named.service failed because the control process exited with error code. See "systemctl status named.service" and "journalctl -xe" for details.
+[root@master named]# journalctl -xe
+-- Defined-By: systemd
+-- Support: http://lists.freedesktop.org/mailman/listinfo/systemd-devel
+-- 
+-- Unit named.service has begun starting up.
+Mar 16 02:23:42 master.sniper.com bash[3151]: zone localhost.localdomain/IN: loaded serial 0
+Mar 16 02:23:42 master.sniper.com bash[3151]: zone localhost/IN: loaded serial 0
+Mar 16 02:23:42 master.sniper.com bash[3151]: zone 1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa/IN: loaded serial 0
+Mar 16 02:23:42 master.sniper.com bash[3151]: zone 1.0.0.127.in-addr.arpa/IN: loaded serial 0
+Mar 16 02:23:42 master.sniper.com bash[3151]: zone 0.in-addr.arpa/IN: loaded serial 0
+Mar 16 02:23:42 master.sniper.com bash[3151]: zone sniper.com/IN: loaded serial 0
+Mar 16 02:23:42 master.sniper.com bash[3151]: zone 25.168.192/IN: NS 'master.sniper.com.25.168.192' has no address records (A or AAAA)
+Mar 16 02:23:42 master.sniper.com bash[3151]: zone 25.168.192/IN: not loaded due to errors.
+Mar 16 02:23:42 master.sniper.com bash[3151]: _default/25.168.192/IN: bad zone
+Mar 16 02:23:42 master.sniper.com systemd[1]: named.service: control process exited, code=exited status=1
+Mar 16 02:23:42 master.sniper.com systemd[1]: Failed to start Berkeley Internet Name Domain (DNS).
+-- Subject: Unit named.service has failed
+-- Defined-By: systemd
+-- Support: http://lists.freedesktop.org/mailman/listinfo/systemd-devel
+-- 
+-- Unit named.service has failed.
+-- 
+-- The result is failed.
+Mar 16 02:23:42 master.sniper.com systemd[1]: Unit named.service entered failed state.
+Mar 16 02:23:42 master.sniper.com systemd[1]: named.service failed.
+Mar 16 02:23:42 master.sniper.com systemd[1]: Reached target Host and Network Name Lookups.
+-- Subject: Unit nss-lookup.target has finished start-up
+-- Defined-By: systemd
+-- Support: http://lists.freedesktop.org/mailman/listinfo/systemd-devel
+-- 
+-- Unit nss-lookup.target has finished starting up.
+-- 
+-- The start-up result is done.
+Mar 16 02:23:42 master.sniper.com polkitd[605]: Unregistered Authentication Agent for unix-process:3137:79906 (system bus name :1.140, object pa
+[root@master named]# vim for.sniper.com
+[root@master named]# systemctl restart named
+Job for named.service failed because the control process exited with error code. See "systemctl status named.service" and "journalctl -xe" for details.
+[root@master named]# vim rev.sniper.com
+[root@master named]# systemctl restart named
+Job for named.service failed because the control process exited with error code. See "systemctl status named.service" and "journalctl -xe" for details.
+[root@master named]# systemctl restart named
+Job for named.service failed because the control process exited with error code. See "systemctl status named.service" and "journalctl -xe" for details.
+[root@master named]# nmtui^C
+[root@master named]# 
+[root@master named]# ll
+total 24
+drwxrwx---. 2 named named    6 Oct 16 18:56 data
+drwxrwx---. 2 named named    6 Oct 16 18:56 dynamic
+-rw-r-----. 1 root  named  227 Mar 16 02:24 for.sniper.com
+-rw-r-----. 1 root  named 2253 Apr  5  2018 named.ca
+-rw-r-----. 1 root  named  152 Dec 15  2009 named.empty
+-rw-r-----. 1 root  named  152 Jun 21  2007 named.localhost
+-rw-r-----. 1 root  named  168 Dec 15  2009 named.loopback
+-rw-r-----. 1 root  named  196 Mar 16 02:25 rev.sniper.com
+drwxrwx---. 2 named named    6 Oct 16 18:56 slaves
+[root@master named]# vim for.sniper.com 
+[root@master named]# vim rev.sniper.com 
+[root@master named]# systemctl restart named
+Job for named.service failed because the control process exited with error code. See "systemctl status named.service" and "journalctl -xe" for details.
+[root@master named]# systemctl status named
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[root@master named]# systemctl status named
+● named.service - Berkeley Internet Name Domain (DNS)
+   Loaded: loaded (/usr/lib/systemd/system/named.service; disabled; vendor preset: disabled)
+   Active: failed (Result: exit-code) since Sat 2024-03-16 02:26:03 IST; 6s ago
+  Process: 3253 ExecStartPre=/bin/bash -c if [ ! "$DISABLE_ZONE_CHECKING" == "yes" ]; then /usr/sbin/named-checkconf -z "$NAMEDCONF"; else echo "Checking of zone files is disabled"; fi (code=exited, status=1/FAILURE)
+
+Mar 16 02:26:03 master.sniper.com bash[3253]: zone 1.0.0.127.in-addr.arpa/IN: loaded serial 0
+Mar 16 02:26:03 master.sniper.com bash[3253]: zone 0.in-addr.arpa/IN: loaded serial 0
+Mar 16 02:26:03 master.sniper.com bash[3253]: zone sniper.com/IN: loaded serial 0
+Mar 16 02:26:03 master.sniper.com bash[3253]: zone 25.168.192/IN: NS 'master.sniper.com.25.168.192' has no address records (A or AAAA)
+Mar 16 02:26:03 master.sniper.com bash[3253]: zone 25.168.192/IN: not loaded due to errors.
+Mar 16 02:26:03 master.sniper.com bash[3253]: _default/25.168.192/IN: bad zone
+Mar 16 02:26:03 master.sniper.com systemd[1]: named.service: control process exited, code=exited status=1
+Mar 16 02:26:03 master.sniper.com systemd[1]: Failed to start Berkeley Internet Name Domain (DNS).
+Mar 16 02:26:03 master.sniper.com systemd[1]: Unit named.service entered failed state.
+Mar 16 02:26:03 master.sniper.com systemd[1]: named.service failed.
+[root@master named]# 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[root@master named]# vim /etc/named.conf
+[root@master named]# systemctl restart named
+Job for named.service failed because the control process exited with error code. See "systemctl status named.service" and "journalctl -xe" for details.
+[root@master named]# systemctl restart named
+Job for named.service failed because the control process exited with error code. See "systemctl status named.service" and "journalctl -xe" for details.
+[root@master named]# systemctl status named
+● named.service - Berkeley Internet Name Domain (DNS)
+   Loaded: loaded (/usr/lib/systemd/system/named.service; disabled; vendor preset: disabled)
+   Active: failed (Result: exit-code) since Sat 2024-03-16 02:27:51 IST; 6s ago
+  Process: 3336 ExecStartPre=/bin/bash -c if [ ! "$DISABLE_ZONE_CHECKING" == "yes" ]; then /usr/sbin/named-checkconf -z "$NAMEDCONF"; else echo "Checking of zone files is disabled"; fi (code=exited, status=1/FAILURE)
+
+Mar 16 02:27:51 master.sniper.com systemd[1]: Starting Berkeley Internet Name Domain (DNS)...
+Mar 16 02:27:51 master.sniper.com bash[3336]: /etc/named.conf:67: zone '25.168.192.in-addr..apra': is not a valid name
+Mar 16 02:27:51 master.sniper.com systemd[1]: named.service: control process exited, code=exited status=1
+Mar 16 02:27:51 master.sniper.com systemd[1]: Failed to start Berkeley Internet Name Domain (DNS).
+Mar 16 02:27:51 master.sniper.com systemd[1]: Unit named.service entered failed state.
+Mar 16 02:27:51 master.sniper.com systemd[1]: named.service failed.
+[root@master named]# vim /etc/named.conf
+[root@master named]# systemctl restart named
+Job for named.service failed because the control process exited with error code. See "systemctl status named.service" and "journalctl -xe" for details.
+[root@master named]# systemctl restart named
+Job for named.service failed because the control process exited with error code. See "systemctl status named.service" and "journalctl -xe" for details.
+[root@master named]# systemctl status named
+● named.service - Berkeley Internet Name Domain (DNS)
+   Loaded: loaded (/usr/lib/systemd/system/named.service; disabled; vendor preset: disabled)
+   Active: failed (Result: exit-code) since Sat 2024-03-16 02:28:41 IST; 10s ago
+  Process: 3377 ExecStartPre=/bin/bash -c if [ ! "$DISABLE_ZONE_CHECKING" == "yes" ]; then /usr/sbin/named-checkconf -z "$NAMEDCONF"; else echo "Checking of zone files is disabled"; fi (code=exited, status=1/FAILURE)
+
+Mar 16 02:28:41 master.sniper.com systemd[1]: Starting Berkeley Internet Name Domain (DNS)...
+Mar 16 02:28:41 master.sniper.com bash[3377]: /etc/named.conf:67: zone '25.168.192.in-addr..arpa': is not a valid name
+Mar 16 02:28:41 master.sniper.com systemd[1]: named.service: control process exited, code=exited status=1
+Mar 16 02:28:41 master.sniper.com systemd[1]: Failed to start Berkeley Internet Name Domain (DNS).
+Mar 16 02:28:41 master.sniper.com systemd[1]: Unit named.service entered failed state.
+Mar 16 02:28:41 master.sniper.com systemd[1]: named.service failed.
+[root@master named]# vim /etc/named.conf
+[root@master named]# systemctl restart named
+Job for named.service failed because the control process exited with error code. See "systemctl status named.service" and "journalctl -xe" for details.
+[root@master named]# systemctl status named
+● named.service - Berkeley Internet Name Domain (DNS)
+   Loaded: loaded (/usr/lib/systemd/system/named.service; disabled; vendor preset: disabled)
+   Active: failed (Result: exit-code) since Sat 2024-03-16 02:29:25 IST; 7s ago
+  Process: 3394 ExecStartPre=/bin/bash -c if [ ! "$DISABLE_ZONE_CHECKING" == "yes" ]; then /usr/sbin/named-checkconf -z "$NAMEDCONF"; else echo "Checking of zone files is disabled"; fi (code=exited, status=1/FAILURE)
+
+Mar 16 02:29:25 master.sniper.com bash[3394]: zone 1.0.0.127.in-addr.arpa/IN: loaded serial 0
+Mar 16 02:29:25 master.sniper.com bash[3394]: zone 0.in-addr.arpa/IN: loaded serial 0
+Mar 16 02:29:25 master.sniper.com bash[3394]: zone sniper.com/IN: loaded serial 0
+Mar 16 02:29:25 master.sniper.com bash[3394]: zone 25.168.192.in-addr.arpa/IN: NS 'master.sniper.com.25.168.192.in-addr.arpa' has no a...r AAAA)
+Mar 16 02:29:25 master.sniper.com bash[3394]: zone 25.168.192.in-addr.arpa/IN: not loaded due to errors.
+Mar 16 02:29:25 master.sniper.com bash[3394]: _default/25.168.192.in-addr.arpa/IN: bad zone
+Mar 16 02:29:25 master.sniper.com systemd[1]: named.service: control process exited, code=exited status=1
+Mar 16 02:29:25 master.sniper.com systemd[1]: Failed to start Berkeley Internet Name Domain (DNS).
+Mar 16 02:29:25 master.sniper.com systemd[1]: Unit named.service entered failed state.
+Mar 16 02:29:25 master.sniper.com systemd[1]: named.service failed.
+Hint: Some lines were ellipsized, use -l to show in full.
+[root@master named]# vim /etc/named.conf
+[root@master named]# systemctl status named
+● named.service - Berkeley Internet Name Domain (DNS)
+   Loaded: loaded (/usr/lib/systemd/system/named.service; disabled; vendor preset: disabled)
+   Active: failed (Result: exit-code) since Sat 2024-03-16 02:29:25 IST; 2min 10s ago
+  Process: 3394 ExecStartPre=/bin/bash -c if [ ! "$DISABLE_ZONE_CHECKING" == "yes" ]; then /usr/sbin/named-checkconf -z "$NAMEDCONF"; else echo "Checking of zone files is disabled"; fi (code=exited, status=1/FAILURE)
+
+Mar 16 02:29:25 master.sniper.com bash[3394]: zone 1.0.0.127.in-addr.arpa/IN: loaded serial 0
+Mar 16 02:29:25 master.sniper.com bash[3394]: zone 0.in-addr.arpa/IN: loaded serial 0
+Mar 16 02:29:25 master.sniper.com bash[3394]: zone sniper.com/IN: loaded serial 0
+Mar 16 02:29:25 master.sniper.com bash[3394]: zone 25.168.192.in-addr.arpa/IN: NS 'master.sniper.com.25.168.192.in-addr.arpa' has no a...r AAAA)
+Mar 16 02:29:25 master.sniper.com bash[3394]: zone 25.168.192.in-addr.arpa/IN: not loaded due to errors.
+Mar 16 02:29:25 master.sniper.com bash[3394]: _default/25.168.192.in-addr.arpa/IN: bad zone
+Mar 16 02:29:25 master.sniper.com systemd[1]: named.service: control process exited, code=exited status=1
+Mar 16 02:29:25 master.sniper.com systemd[1]: Failed to start Berkeley Internet Name Domain (DNS).
+Mar 16 02:29:25 master.sniper.com systemd[1]: Unit named.service entered failed state.
+Mar 16 02:29:25 master.sniper.com systemd[1]: named.service failed.
+Hint: Some lines were ellipsized, use -l to show in full.
+[root@master named]# vim /etc/named.conf
+[root@master named]# vim for.sniper.com 
+[root@master named]# systemctl status named
+● named.service - Berkeley Internet Name Domain (DNS)
+   Loaded: loaded (/usr/lib/systemd/system/named.service; disabled; vendor preset: disabled)
+   Active: failed (Result: exit-code) since Sat 2024-03-16 02:29:25 IST; 6min ago
+  Process: 3394 ExecStartPre=/bin/bash -c if [ ! "$DISABLE_ZONE_CHECKING" == "yes" ]; then /usr/sbin/named-checkconf -z "$NAMEDCONF"; else echo "Checking of zone files is disabled"; fi (code=exited, status=1/FAILURE)
+
+Mar 16 02:29:25 master.sniper.com bash[3394]: zone 1.0.0.127.in-addr.arpa/IN: loaded serial 0
+Mar 16 02:29:25 master.sniper.com bash[3394]: zone 0.in-addr.arpa/IN: loaded serial 0
+Mar 16 02:29:25 master.sniper.com bash[3394]: zone sniper.com/IN: loaded serial 0
+Mar 16 02:29:25 master.sniper.com bash[3394]: zone 25.168.192.in-addr.arpa/IN: NS 'master.sniper.com.25.168.192.in-addr.arpa' has no a...r AAAA)
+Mar 16 02:29:25 master.sniper.com bash[3394]: zone 25.168.192.in-addr.arpa/IN: not loaded due to errors.
+Mar 16 02:29:25 master.sniper.com bash[3394]: _default/25.168.192.in-addr.arpa/IN: bad zone
+Mar 16 02:29:25 master.sniper.com systemd[1]: named.service: control process exited, code=exited status=1
+Mar 16 02:29:25 master.sniper.com systemd[1]: Failed to start Berkeley Internet Name Domain (DNS).
+Mar 16 02:29:25 master.sniper.com systemd[1]: Unit named.service entered failed state.
+Mar 16 02:29:25 master.sniper.com systemd[1]: named.service failed.
+Hint: Some lines were ellipsized, use -l to show in full.
+[root@master named]# systemctl restart named
+Job for named.service failed because the control process exited with error code. See "systemctl status named.service" and "journalctl -xe" for details.
+[root@master named]# systemctl status named
+● named.service - Berkeley Internet Name Domain (DNS)
+   Loaded: loaded (/usr/lib/systemd/system/named.service; disabled; vendor preset: disabled)
+   Active: failed (Result: exit-code) since Sat 2024-03-16 02:35:49 IST; 5s ago
+  Process: 3479 ExecStartPre=/bin/bash -c if [ ! "$DISABLE_ZONE_CHECKING" == "yes" ]; then /usr/sbin/named-checkconf -z "$NAMEDCONF"; else echo "Checking of zone files is disabled"; fi (code=exited, status=1/FAILURE)
+
+Mar 16 02:35:49 master.sniper.com bash[3479]: zone 1.0.0.127.in-addr.arpa/IN: loaded serial 0
+Mar 16 02:35:49 master.sniper.com bash[3479]: zone 0.in-addr.arpa/IN: loaded serial 0
+Mar 16 02:35:49 master.sniper.com bash[3479]: zone sniper.com/IN: loaded serial 0
+Mar 16 02:35:49 master.sniper.com bash[3479]: zone 25.168.192.in-addr.arpa/IN: NS 'master.sniper.com.25.168.192.in-addr.arpa' has no a...r AAAA)
+Mar 16 02:35:49 master.sniper.com bash[3479]: zone 25.168.192.in-addr.arpa/IN: not loaded due to errors.
+Mar 16 02:35:49 master.sniper.com bash[3479]: _default/25.168.192.in-addr.arpa/IN: bad zone
+Mar 16 02:35:49 master.sniper.com systemd[1]: named.service: control process exited, code=exited status=1
+Mar 16 02:35:49 master.sniper.com systemd[1]: Failed to start Berkeley Internet Name Domain (DNS).
+Mar 16 02:35:49 master.sniper.com systemd[1]: Unit named.service entered failed state.
+Mar 16 02:35:49 master.sniper.com systemd[1]: named.service failed.
+Hint: Some lines were ellipsized, use -l to show in full.
+[root@master named]# vim /etc/named.conf
+[root@master named]# vim rev.sniper.com 
+[root@master named]# systemctl restart named
+[root@master named]# systemctl reload named
+[root@master named]# firewall-cmd --zone=public --add-s
+--add-service=      --add-source=       --add-source-port=  
+[root@master named]# firewall-cmd --zone=public --add-service=dns --permanent 
+success
+[root@master named]# firewall-cmd --reload
+success
+[root@master named]# nslookup monster.com
+Server:		192.168.25.2
+Address:	192.168.25.2#53
+
+Non-authoritative answer:
+Name:	monster.com
+Address: 208.71.193.147
+
+[root@master named]# systemctl status named
+● named.service - Berkeley Internet Name Domain (DNS)
+   Loaded: loaded (/usr/lib/systemd/system/named.service; disabled; vendor preset: disabled)
+   Active: active (running) since Sat 2024-03-16 02:38:48 IST; 1min 53s ago
+  Process: 3538 ExecReload=/bin/sh -c /usr/sbin/rndc reload > /dev/null 2>&1 || /bin/kill -HUP $MAINPID (code=exited, status=0/SUCCESS)
+  Process: 3526 ExecStart=/usr/sbin/named -u named -c ${NAMEDCONF} $OPTIONS (code=exited, status=0/SUCCESS)
+  Process: 3522 ExecStartPre=/bin/bash -c if [ ! "$DISABLE_ZONE_CHECKING" == "yes" ]; then /usr/sbin/named-checkconf -z "$NAMEDCONF"; else echo "Checking of zone files is disabled"; fi (code=exited, status=0/SUCCESS)
+ Main PID: 3527 (named)
+    Tasks: 5
+   CGroup: /system.slice/named.service
+           └─3527 /usr/sbin/named -u named -c /etc/named.conf
+
+Mar 16 02:40:24 master.sniper.com named[3527]: network unreachable resolving 'monster.com/AAAA/IN': 2001:dc3::35#53
+Mar 16 02:40:24 master.sniper.com named[3527]: network unreachable resolving 'monster.com/AAAA/IN': 2001:500:a8::e#53
+Mar 16 02:40:26 master.sniper.com named[3527]: network unreachable resolving './NS/IN': 2001:500:9f::42#53
+Mar 16 02:40:26 master.sniper.com named[3527]: network unreachable resolving 'monster.com/A/IN': 2001:500:9f::42#53
+Mar 16 02:40:27 master.sniper.com named[3527]: network unreachable resolving 'monster.com/AAAA/IN': 2001:503:ba3e::2:30#53
+Mar 16 02:40:27 master.sniper.com named[3527]: network unreachable resolving './NS/IN': 2001:500:2::c#53
+Mar 16 02:40:27 master.sniper.com named[3527]: network unreachable resolving 'monster.com/A/IN': 2001:500:2::c#53
+Mar 16 02:40:27 master.sniper.com named[3527]: network unreachable resolving 'monster.com/AAAA/IN': 2001:500:2::c#53
+Mar 16 02:40:29 master.sniper.com named[3527]: network unreachable resolving 'monster.com/AAAA/IN': 2001:500:9f::42#53
+Mar 16 02:40:31 master.sniper.com named[3527]: resolver priming query complete
+[root@master named]# nslookup monster.com
+Server:		192.168.25.2
+Address:	192.168.25.2#53
+
+Non-authoritative answer:
+Name:	monster.com
+Address: 208.71.193.147
+
+[root@master named]# nmtui
+[root@master named]# nslookup monster.com
+Server:		192.168.25.2
+Address:	192.168.25.2#53
+
+Non-authoritative answer:
+Name:	monster.com
+Address: 208.71.193.147
+
+[root@master named]# ifconfig
+ens33: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 192.168.25.151  netmask 255.255.255.0  broadcast 192.168.25.255
+        inet6 fe80::bec4:3cdf:3062:c1a5  prefixlen 64  scopeid 0x20<link>
+        ether 00:0c:29:e3:69:af  txqueuelen 1000  (Ethernet)
+        RX packets 1153  bytes 1660928 (1.5 MiB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 634  bytes 49065 (47.9 KiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
+        inet 127.0.0.1  netmask 255.0.0.0
+        inet6 ::1  prefixlen 128  scopeid 0x10<host>
+        loop  txqueuelen 1000  (Local Loopback)
+        RX packets 62  bytes 5274 (5.1 KiB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 62  bytes 5274 (5.1 KiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+virbr0: flags=4099<UP,BROADCAST,MULTICAST>  mtu 1500
+        inet 192.168.122.1  netmask 255.255.255.0  broadcast 192.168.122.255
+        ether 52:54:00:5f:77:1d  txqueuelen 1000  (Ethernet)
+        RX packets 0  bytes 0 (0.0 B)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 0  bytes 0 (0.0 B)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+[root@master named]# vim /etc/named.conf
+[root@master named]# nslookup sniper.com
+Server:		192.168.25.151
+Address:	192.168.25.151#53
+
+Name:	sniper.com
+Address: 192.168.25.151
+
+[root@master named]# 

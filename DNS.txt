@@ -1,0 +1,75 @@
+****ON-SERVER****
+
+
+[root@Master ~]# nmtui
+[root@Master ~]# vim /etc/named.conf
+
+
+zone "ice.com." IN {
+        type master;
+        file "for.ice.com";
+};
+zone "20.168.192.in-addr.arpa" IN {
+        type master;
+        file "rev.ice.com";
+};
+
+
+
+[root@Master ~]# cd /var/named
+[root@Master named]# cp -av named.localhost for.ice.com
+‘named.localhost’ -> ‘for.ice.com’
+[root@Master named]# vim for.ice.com
+
+$TTL 1D
+@       IN SOA  master.ice.com. user@1gmail.com.  (
+                                        0       ; serial
+                                        1D      ; refresh
+                                        1H      ; retry
+                                        1W      ; expire
+                                        3H )    ; minimum
+@       IN NS master.ice.com.
+ice.com. IN A 192.168.20.231
+master  IN A 192.168.20.231
+slave IN A 192.168.20.232
+
+
+[root@Master named]# cp -av for.ice.com rev.ice.com
+‘for.ice.com’ -> ‘rev.ice.com’
+[root@Master named]# vim rev.ice.com
+
+$TTL 1D
+@       IN SOA  master.ice.com. user@1gmail.com.  (
+                                        0       ; serial
+                                        1D      ; refresh
+                                        1H      ; retry
+                                        1W      ; expire
+                                        3H )    ; minimum
+@       IN NS master.ice.com.
+231 IN PTR master.ice.com.
+232 IN PTR slave.ice.com.
+
+
+[root@Master named]# systemctl restart named
+[root@Master named]# systemctl enable named
+Created symlink from /etc/systemd/system/multi-user.target.wants/named.service to /usr/lib/systemd/system/named.service.
+[root@Master named]# firewall-cmd --zone=public --add-service=dns --permanent
+success
+[root@Master named]# firewall-cmd --reload
+success
+
+
+****ON-CLIENT****
+
+CREATE ONLY ZONES NOT FOR AND REV FILE
+
+zone "ice.com" IN {
+        type slave;
+        file "slaves/for.ice.com";
+        masters{ 192.168.20.231; };
+};
+zone "20.168.192.in-addr.arpa" IN {
+        type slave;
+        file "slaves/rev.ice.com";
+        masters{ 192.168.20.231; };
+};

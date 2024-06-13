@@ -1,0 +1,45 @@
+Q. Find the "root" string in /etc/passwd file and copy that string in /string.txt
+
+Q. Find files which are owned by user "natasha" and copy them to "/data"
+
+Q. Create a Command Shell Environment on machine : 
+- Create a command 'qstat'.
+- It should able to execute the following command ( ps -eo pid,tid,class,rtprio,ni,pri,psr,pcpu,stat,comm )
+
+Q. You need to change the owner of a file named /tmp/exe from harry, who is a member of the users group, to natasha, who is a member of the editors group. Assuming you want to change both user and group owners, which command will do this?
+
+Q. You need to change the permissions of a file named schedule.txt such that the file owner can edit the file, users who are members of the group that owns the file can edit it, and users who are not owners and don't belong to the owning group can view it but not modify it. Which command will do this?
+Q. Display all the active connections on system using 'netstat' and grep source and destination IP and port number & for each port number print the associated file.
+
+Q. Create script which create 50 users named as 'cdac_test_1' to 'cdac_test_50' with password as username. And create a file for alternate users starting from 1 in their home dir from root user name as 'username_flag.txt' and the data should be "username:data'.
+
+Q. Display all system info which includes:(/dev/sda)
+
+a. CPU manufacturer (cat /proc/cpuinfo)
+b. total number of cores available (cat /proc/cpuinfo)
+c. Total number of memory in GB (free -mh)
+d. Current free RAM in GB (free -mh)
+e. total disk size present on system (lsblk)
+
+Q. Script :::: Create a script /root/myscript.sh that should print "redhat" when user input "fedora" as argument, & vice-versa, it should print "redhat|fedora" without argument.
+
+Q. How do you print the lines between 5 and 10, both inclusive?
+
+Q. Create a new file “new.txt” that is a concatenation of “file1.txt” and “file2.txt”?
+
+Q. What is the output of the following code:
+
+os=Unix
+echo 1.$os 2."$os" 3.'$os' 4.$os
+
+Q. If a file with execute permissions set, but with unknown file format is executed?
+
+Q. To feed standard output of one command to standard input of another in a single shell session. example?
+
+Q. What is the output of this command?
+
+cat < file1 >> file2 | file3
+
+Q. Syntax to suppress the display of command error to monitor?
+
+Q. Find a .conf extension files in /etc and copy files to /search

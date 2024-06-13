@@ -1,0 +1,70 @@
+# vim /etc/httpd/conf.d/default-site.conf
+<VirtualHost *:80>
+<Proxy balance://mycluster>
+	BalancerMember http://x.x.x.1:80
+	BalancerMember http://x.x.x.2:80
+</Proxy>
+	ProxyPreserveHost	On
+	ProxyPass	/	balancer://mycluster/
+</VirtualHost>
+
+
+
+
+
+HAProxy [ Apache Load Balancing ]
+`````````````````````````````````
+server.sniper.com	:	192.168.1.254 : WebServer01
+slave.sniper.com	:	192.168.1.2 	: WebServer02
+haproxy.sniper.com: 192.168.1.3		:	HAProxy
+
+
+
+
+
+
+
+
+
+# yum install haproxy -y
+
+
+
+
+
+
+
+
+
+
+
+
+# vim /etc/haproxy/test.cfg
+frontend http80
+        bind *:80
+        timeout client 60s
+        mode http
+        default_backend webservers
+
+backend webservers
+        timeout connect 10s
+        timeout server 100s
+        balance roundrobin
+        mode http
+        server web1 server.sniper.com:80
+        server web2 slave.sniper.com:80
+
+# haproxy -f test.cfg
+
+
+
+
+
+
+
+
+
+
+ACL:
+````
+http-request deny if { path -i -m neg /admin } 

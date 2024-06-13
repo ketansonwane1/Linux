@@ -1,0 +1,165 @@
+
+[root@master ~]# fdisk /dev/sdb
+Welcome to fdisk (util-linux 2.23.2).
+
+Changes will remain in memory only, until you decide to write them.
+Be careful before using the write command.
+
+Device does not contain a recognized partition table
+Building a new DOS disklabel with disk identifier 0xb6f08d0a.
+
+Command (m for help): p
+
+Disk /dev/sdb: 21.5 GB, 21474836480 bytes, 41943040 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disk label type: dos
+Disk identifier: 0xb6f08d0a
+
+   Device Boot      Start         End      Blocks   Id  System
+
+Command (m for help): n
+Partition type:
+   p   primary (0 primary, 0 extended, 4 free)
+   e   extended
+Select (default p): 1
+Invalid partition type `1'
+
+Command (m for help): n
+Partition type:
+   p   primary (0 primary, 0 extended, 4 free)
+   e   extended
+Select (default p): p
+Partition number (1-4, default 1): 1
+First sector (2048-41943039, default 2048): 
+Using default value 2048
+Last sector, +sectors or +size{K,M,G} (2048-41943039, default 41943039): +10G
+Partition 1 of type Linux and of size 10 GiB is set
+
+Command (m for help): n
+Partition type:
+   p   primary (1 primary, 0 extended, 3 free)
+   e   extended
+Select (default p): e
+Partition number (2-4, default 2): 
+First sector (20973568-41943039, default 20973568): 
+Using default value 20973568
+Last sector, +sectors or +size{K,M,G} (20973568-41943039, default 41943039): 
+Using default value 41943039
+Partition 2 of type Extended and of size 10 GiB is set
+
+Command (m for help): n
+Partition type:
+   p   primary (1 primary, 1 extended, 2 free)
+   l   logical (numbered from 5)
+Select (default p): l
+Adding logical partition 5
+First sector (20975616-41943039, default 20975616): 
+Using default value 20975616
+Last sector, +sectors or +size{K,M,G} (20975616-41943039, default 41943039): +5G
+Partition 5 of type Linux and of size 5 GiB is set
+
+Command (m for help): n
+Partition type:
+   p   primary (1 primary, 1 extended, 2 free)
+   l   logical (numbered from 5)
+Select (default p): l
+Adding logical partition 6
+First sector (31463424-41943039, default 31463424): 
+Using default value 31463424
+Last sector, +sectors or +size{K,M,G} (31463424-41943039, default 41943039): 
+Using default value 41943039
+Partition 6 of type Linux and of size 5 GiB is set
+
+Command (m for help): p
+
+Disk /dev/sdb: 21.5 GB, 21474836480 bytes, 41943040 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disk label type: dos
+Disk identifier: 0xb6f08d0a
+
+   Device Boot      Start         End      Blocks   Id  System
+/dev/sdb1            2048    20973567    10485760   83  Linux
+/dev/sdb2        20973568    41943039    10484736    5  Extended
+/dev/sdb5        20975616    31461375     5242880   83  Linux
+/dev/sdb6        31463424    41943039     5239808   83  Linux
+
+Command (m for help): t
+Partition number (1,2,5,6, default 6): 5 
+Hex code (type L to list all codes): 82
+Changed type of partition 'Linux' to 'Linux swap / Solaris'
+
+Command (m for help): w
+The partition table has been altered!
+
+Calling ioctl() to re-read partition table.
+Syncing disks.
+[root@master ~]# swapon -a
+[root@master ~]# free -mh
+              total        used        free      shared  buff/cache   available
+Mem:           7.1G        936M        5.5G         25M        691M        5.9G
+Swap:          7.8G          0B        7.8G
+
+[root@master ~]# free -mh
+              total        used        free      shared  buff/cache   available
+Mem:           7.1G        934M        5.5G         25M        691M        5.9G
+Swap:          7.8G          0B        7.8G
+[root@master ~]# swaoff -a
+bash: swaoff: command not found...
+[root@master ~]# swapoff -a
+[root@master ~]# free -mh
+              total        used        free      shared  buff/cache   available
+Mem:           7.1G        938M        5.5G         27M        692M        5.9G
+Swap:            0B          0B          0B
+[root@master ~]# mkdir /main
+[root@master ~]# mkdir /l1
+[root@master ~]# mkdir /l2
+[root@master ~]# mkfs.xfs /dev/sdb1
+[root@master ~]# vim /etc/fstab
+[root@master ~]# mount -a
+
+[root@master ~]# umount /dev/sdb5
+[root@master ~]# vim /etc/fstab
+[root@master ~]# umount /dev/sdb6
+
+[root@master ~]# mkfs.xfs /dev/sdb5 -f
+
+[root@master ~]# mkfs.xfs /dev/sdb6 -f
+
+
+sr0     11:0    1  4.4G  0 rom  /run/media/spiderman/CentOS 7 x86_64
+[root@master ~]# vim /etc/fstab
+[root@master ~]# mount -a
+[root@master ~]# umount /dev/sdb6
+[root@master ~]# vim /etc/fstab
+[root@master ~]# mount -a
+[root@master ~]# pvcreate /dev/sdb6
+WARNING: xfs signature detected on /dev/sdb6 at offset 0. Wipe it? [y/n]: y
+  Wiping xfs signature on /dev/sdb6.
+  Physical volume "/dev/sdb6" successfully created.
+[root@master ~]# vgcreate new_vg /dev/sdb6
+  Volume group "new_vg" successfully created
+[root@master ~]# lvcreate -L +200M -n lv_1 /dev/new_vg
+  Logical volume "lv_1" created.
+[root@master ~]# lvcreate -L +200M -n lv_2 /dev/new_vg
+  Logical volume "lv_2" created.
+[root@master ~]# mkdir /lv_1
+[root@master ~]# mkdir /lv_2
+[root@master ~]# mkfs.xfs -f /dev/new_vg/lv_1
+[root@master ~]# vim /etc/fstab
+[root@master ~]# mount -a
+
+[root@master ~]# lvextend -L +100M /dev/new_vg/lv_1
+  Size of logical volume new_vg/lv_1 changed from 200.00 MiB (50 extents) to 300.00 MiB (75 extents).
+  Logical volume new_vg/lv_1 successfully resized.
+
+
+[root@master ~]# lvreduce -L 100m /dev/new_vg/lv_2
+  WARNING: Reducing active and open logical volume to 100.00 MiB.
+  THIS MAY DESTROY YOUR DATA (filesystem etc.)
+Do you really want to reduce new_vg/lv_2? [y/n]: y
+  Size of logical volume new_vg/lv_2 changed from 200.00 MiB (50 extents) to 100.00 MiB (25 extents).
+  Logical volume new_vg/lv_2 successfully resized.

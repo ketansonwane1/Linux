@@ -1,0 +1,148 @@
+192.168.1.254 	server.sniper.com	[kbserver]
+192.168.1.2 	slave.sniper.com 	[kbclient]
+-----------------------
+
+
+
+
+
+1) Must configure NTP
+
+2)
+++Packages required:
+----------
+KDC server package: krb5-server
+Admin package: krb5-libs
+Client package: krb5-workstation
+SSH: pam_krb5
+
+++Configuration Files:
+----------
+/var/kerberos/krb5kdc/kdc.conf
+/var/kerberos/krb5kdc/kadm5.acl
+/etc/krb5.conf
+
+++Paths:
+----------
+KDC path: /var/kerberos/krb5kdc/
+
+3) Installing & Configuring KDC Server:
+
+#yum -y install krb5-server krb5-libs krb5-workstation pam_krb5
+
+4) ++Create a user for test:
+
+#useradd user01
+
+5) ++Adjust /var/kerberos/krb5kdc/kdc.conf on the KDC:
+	
+#vim /var/kerberos/krb5kdc/kdc.conf
+
+[kdcdefaults]
+ kdc_ports = 88
+ kdc_tcp_ports = 88
+
+[realms]
+ SNIPER.COM = {
+  #master_key_type = aes256-cts
+  acl_file = /var/kerberos/krb5kdc/kadm5.acl
+  dict_file = /usr/share/dict/words
+  admin_keytab = /var/kerberos/krb5kdc/kadm5.keytab
+  supported_enctypes = aes256-cts:normal aes128-cts:normal des3-hmac-sha1:normal arcfour-hmac:normal camellia256-cts:normal camellia128-cts:normal des-hmac-sha1:normal des-cbc-md5:normal des-cbc-crc:normal
+ }
+
+++ Adjust /var/kerberos/krb5kdc/kadm5.acl on KDC:
+
+#vim /var/kerberos/krb5kdc/kadm5.acl
+
+*/admin@SNIPER.COM	    *
+
+6) Primary configuration file is 'krb5.conf':
+
+--> Ensure the default realm is set your domain name in capital case
+	
+#vim /etc/krb5.conf
+
+includedir /etc/krb5.conf.d/
+
+[logging]
+ default = FILE:/var/log/krb5libs.log
+ kdc = FILE:/var/log/krb5kdc.log
+ admin_server = FILE:/var/log/kadmind.log
+
+[libdefaults]
+ dns_lookup_realm = false
+ ticket_lifetime = 24h
+ renew_lifetime = 7d
+ forwardable = true
+ rdns = false
+ pkinit_anchors = FILE:/etc/pki/tls/certs/ca-bundle.crt
+ default_realm = SNIPER.COM
+ default_ccache_name = KEYRING:persistent:%{uid}
+
+[realms]
+ SNIPER.COM = {
+  kdc = server.sniper.com
+  admin_server = server.sniper.com
+ }
+
+[domain_realm]
+ .sniper.com = SNIPER.COM
+ sniper.com = SNIPER.COM
+
+
+:wq
+
+7) Creating KDC database to hold our sensitive Kerberos data:
+
+-->Create the database and set a good password which you can remember. This command also stashes your password on the KDC so you don’t have to enter it each time you start the KDC:
+
+#kdb5_util create -s -r SNIPER.COM
+
+#systemctl start krb5kdc.service kadmin.service
+
+8) Now on the KDC create a admin principal and also a test user (user01):
+
+# kadmin.local
+kadmin.local:  listprincs
+kadmin.local:  addprinc root/admin
+kadmin.local:  addprinc user01
+kadmin.local:  addprinc -randkey host/server.sniper.com
+kadmin.local:  listprincs
+kadmin.local:  ktadd host/server.sniper.com
+kadmin.local:  addprinc -randkey host/slave.sniper.com
+kadmin.local:  ktadd -k /tmp/proxy.keytab host/slave.sniper.com
+kadmin.local:  exit
+
+++ Let’s start the Kerberos KDC and kadmin daemons:
+
+#systemctl restart krb5kdc.service kadmin.service
+
+
+9) Configure SSH to use kerberos auth to generate token:
+
+GSSAPI [ Generic Service Application API]
+
+#vim /etc/ssh/sshd_config
++++++Add
+GCCAPIAuthentication yes
+GCCAPIDelegateCredentials yes
+:wq
+
+10) Enable kerberos for auth
+#authconfig --update --enablekrb5 --krb5kdc=master.sniper.com --krb5adminserver=master.sniper.com --krb5realm=SNIPER.COM
+#systemctl restart sshd
+
+11) Now try to generate token:
+
+#su - tux
+$klist [to check the token]
+
+$kinit [ to generate toket and access on kerberos]
+$klist
+
+++++++++++++ END SERVER ++++++++++++++++
+
+
+
+

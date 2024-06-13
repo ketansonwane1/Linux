@@ -1,0 +1,380 @@
+[spiderman@master ~]$ su =
+su: user = does not exist
+[spiderman@master ~]$ su-
+bash: su-: command not found...
+[spiderman@master ~]$ su -
+Password: 
+Last login: Tue Mar 19 20:10:19 IST 2024 on pts/1
+[root@master ~]# yum install dovecot -y
+Loaded plugins: fastestmirror, langpacks
+Loading mirror speeds from cached hostfile
+ * base: centos.mirror.net.in
+ * extras: centos.mirror.net.in
+ * updates: centos.mirror.net.in
+Resolving Dependencies
+--> Running transaction check
+---> Package dovecot.x86_64 1:2.2.36-8.el7 will be installed
+--> Processing Dependency: portreserve for package: 1:dovecot-2.2.36-8.el7.x86_64
+--> Processing Dependency: libclucene-shared.so.1()(64bit) for package: 1:dovecot-2.2.36-8.el7.x86_64
+--> Processing Dependency: libclucene-core.so.1()(64bit) for package: 1:dovecot-2.2.36-8.el7.x86_64
+--> Running transaction check
+---> Package clucene-core.x86_64 0:2.3.3.4-11.el7 will be installed
+---> Package portreserve.x86_64 0:0.0.5-11.el7 will be installed
+--> Finished Dependency Resolution
+
+Dependencies Resolved
+
+================================================================================
+ Package              Arch           Version                 Repository    Size
+================================================================================
+Installing:
+ dovecot              x86_64         1:2.2.36-8.el7          base         4.4 M
+Installing for dependencies:
+ clucene-core         x86_64         2.3.3.4-11.el7          base         528 k
+ portreserve          x86_64         0.0.5-11.el7            base          26 k
+
+Transaction Summary
+================================================================================
+Install  1 Package (+2 Dependent packages)
+
+Total download size: 4.9 M
+Installed size: 16 M
+Downloading packages:
+(1/3): clucene-core-2.3.3.4-11.el7.x86_64.rpm              | 528 kB   00:00     
+(2/3): portreserve-0.0.5-11.el7.x86_64.rpm                 |  26 kB   00:00     
+(3/3): dovecot-2.2.36-8.el7.x86_64.rpm                     | 4.4 MB   00:04     
+--------------------------------------------------------------------------------
+Total                                              1.1 MB/s | 4.9 MB  00:04     
+Running transaction check
+Running transaction test
+Transaction test succeeded
+Running transaction
+  Installing : clucene-core-2.3.3.4-11.el7.x86_64                           1/3 
+  Installing : portreserve-0.0.5-11.el7.x86_64                              2/3 
+  Installing : 1:dovecot-2.2.36-8.el7.x86_64                                3/3 
+  Verifying  : 1:dovecot-2.2.36-8.el7.x86_64                                1/3 
+  Verifying  : portreserve-0.0.5-11.el7.x86_64                              2/3 
+  Verifying  : clucene-core-2.3.3.4-11.el7.x86_64                           3/3 
+
+Installed:
+  dovecot.x86_64 1:2.2.36-8.el7                                                 
+
+Dependency Installed:
+  clucene-core.x86_64 0:2.3.3.4-11.el7     portreserve.x86_64 0:0.0.5-11.el7    
+
+Complete!
+[root@master ~]# vim /etc/dovecot/dovecot.conf
+[root@master ~]# vim /etc/dovecot/conf.d/10-master.conf
+[root@master ~]# vim /etc/dovecot/conf.d/10-auth.conf
+[root@master ~]# vim /etc/dovecot/conf.d/10-ssl.conf
+[root@master ~]# vim /etc/dovecot/conf.d/10-mail.conf
+[root@master ~]# systemctl enable dovecot
+Created symlink from /etc/systemd/system/multi-user.target.wants/dovecot.service to /usr/lib/systemd/system/dovecot.service.
+[root@master ~]# systemctl start dovecot
+[root@master ~]# lsof -i
+COMMAND    PID   USER   FD   TYPE DEVICE SIZE/OFF NODE NAME
+rpcbind    601    rpc    6u  IPv4  18826      0t0  UDP *:sunrpc 
+rpcbind    601    rpc    7u  IPv4  18827      0t0  UDP *:acmaint_dbd 
+rpcbind    601    rpc    8u  IPv4  18828      0t0  TCP *:sunrpc (LISTEN)
+rpcbind    601    rpc    9u  IPv6  18829      0t0  UDP *:sunrpc 
+rpcbind    601    rpc   10u  IPv6  18830      0t0  UDP *:acmaint_dbd 
+rpcbind    601    rpc   11u  IPv6  18831      0t0  TCP *:sunrpc (LISTEN)
+avahi-dae  611  avahi   12u  IPv4  21073      0t0  UDP *:mdns 
+avahi-dae  611  avahi   13u  IPv4  21074      0t0  UDP *:45179 
+chronyd    622 chrony    4u  IPv4  43989      0t0  UDP master.sniper.com:33789->ntp2.ggsrv.de:ntp 
+chronyd    622 chrony    5u  IPv4  21053      0t0  UDP localhost:323 
+chronyd    622 chrony    6u  IPv6  21054      0t0  UDP localhost:323 
+chronyd    622 chrony    9u  IPv4  44026      0t0  UDP master.sniper.com:49400->144.24.146.96:ntp 
+chronyd    622 chrony   10u  IPv4  44027      0t0  UDP master.sniper.com:58325->time.cloudflare.com:ntp 
+chronyd    622 chrony   11u  IPv4  44029      0t0  UDP master.sniper.com:58497->ntp-pool.time.4v1.in:ntp 
+dhclient   874   root    6u  IPv4  25119      0t0  UDP *:bootpc 
+cupsd     1068   root   10u  IPv6  27004      0t0  TCP localhost:ipp (LISTEN)
+cupsd     1068   root   11u  IPv4  27005      0t0  TCP localhost:ipp (LISTEN)
+sshd      1073   root    3u  IPv4  27056      0t0  TCP *:ssh (LISTEN)
+sshd      1073   root    4u  IPv6  27066      0t0  TCP *:ssh (LISTEN)
+dhcpd     1076  dhcpd    7u  IPv4  27178      0t0  UDP *:bootps 
+dnsmasq   1374 nobody    3u  IPv4  29105      0t0  UDP *:bootps 
+dnsmasq   1374 nobody    5u  IPv4  29108      0t0  UDP master.sniper.com:domain 
+dnsmasq   1374 nobody    6u  IPv4  29109      0t0  TCP master.sniper.com:domain (LISTEN)
+master    1428   root   13u  IPv4  30009      0t0  TCP localhost:smtp (LISTEN)
+master    1428   root   14u  IPv6  30010      0t0  TCP localhost:smtp (LISTEN)
+dovecot   3176   root   25u  IPv4  43793      0t0  TCP *:pop3 (LISTEN)
+dovecot   3176   root   26u  IPv6  43794      0t0  TCP *:pop3 (LISTEN)
+dovecot   3176   root   38u  IPv4  43817      0t0  TCP *:imap (LISTEN)
+dovecot   3176   root   39u  IPv6  43818      0t0  TCP *:imap (LISTEN)
+[root@master ~]# lsof -i
+COMMAND    PID   USER   FD   TYPE DEVICE SIZE/OFF NODE NAME
+rpcbind    601    rpc    6u  IPv4  18826      0t0  UDP *:sunrpc 
+rpcbind    601    rpc    7u  IPv4  18827      0t0  UDP *:acmaint_dbd 
+rpcbind    601    rpc    8u  IPv4  18828      0t0  TCP *:sunrpc (LISTEN)
+rpcbind    601    rpc    9u  IPv6  18829      0t0  UDP *:sunrpc 
+rpcbind    601    rpc   10u  IPv6  18830      0t0  UDP *:acmaint_dbd 
+rpcbind    601    rpc   11u  IPv6  18831      0t0  TCP *:sunrpc (LISTEN)
+avahi-dae  611  avahi   12u  IPv4  21073      0t0  UDP *:mdns 
+avahi-dae  611  avahi   13u  IPv4  21074      0t0  UDP *:45179 
+chronyd    622 chrony    5u  IPv4  21053      0t0  UDP localhost:323 
+chronyd    622 chrony    6u  IPv6  21054      0t0  UDP localhost:323 
+dhclient   874   root    6u  IPv4  25119      0t0  UDP *:bootpc 
+cupsd     1068   root   10u  IPv6  27004      0t0  TCP localhost:ipp (LISTEN)
+cupsd     1068   root   11u  IPv4  27005      0t0  TCP localhost:ipp (LISTEN)
+sshd      1073   root    3u  IPv4  27056      0t0  TCP *:ssh (LISTEN)
+sshd      1073   root    4u  IPv6  27066      0t0  TCP *:ssh (LISTEN)
+dhcpd     1076  dhcpd    7u  IPv4  27178      0t0  UDP *:bootps 
+dnsmasq   1374 nobody    3u  IPv4  29105      0t0  UDP *:bootps 
+dnsmasq   1374 nobody    5u  IPv4  29108      0t0  UDP master.sniper.com:domain 
+dnsmasq   1374 nobody    6u  IPv4  29109      0t0  TCP master.sniper.com:domain (LISTEN)
+master    1428   root   13u  IPv4  30009      0t0  TCP localhost:smtp (LISTEN)
+master    1428   root   14u  IPv6  30010      0t0  TCP localhost:smtp (LISTEN)
+dovecot   3176   root   25u  IPv4  43793      0t0  TCP *:pop3 (LISTEN)
+dovecot   3176   root   26u  IPv6  43794      0t0  TCP *:pop3 (LISTEN)
+dovecot   3176   root   38u  IPv4  43817      0t0  TCP *:imap (LISTEN)
+dovecot   3176   root   39u  IPv6  43818      0t0  TCP *:imap (LISTEN)
+[root@master ~]# lsof -i:110
+COMMAND  PID USER   FD   TYPE DEVICE SIZE/OFF NODE NAME
+dovecot 3176 root   25u  IPv4  43793      0t0  TCP *:pop3 (LISTEN)
+dovecot 3176 root   26u  IPv6  43794      0t0  TCP *:pop3 (LISTEN)
+[root@master ~]# lsof -i:143
+COMMAND  PID USER   FD   TYPE DEVICE SIZE/OFF NODE NAME
+dovecot 3176 root   38u  IPv4  43817      0t0  TCP *:imap (LISTEN)
+dovecot 3176 root   39u  IPv6  43818      0t0  TCP *:imap (LISTEN)
+[root@master ~]# vim /etc/dovecot/conf.d/10-mail.conf
+[root@master ~]# systemctl enable dovecot
+
+
+
+
+
+
+
+SquirrelMail Configuration : Read: config.php
+Config version 1.4.0; SquirrelMail version unknown
+---------------------------------------------------------
+Main Menu --
+1.  Organization Preferences
+2.  Server Settings
+3.  Folder Defaults
+4.  General Options
+5.  Themes
+6.  Address Books
+7.  Message of the Day (MOTD)
+8.  Plugins
+9.  Database
+10. Languages
+
+D.  Set pre-defined settings for specific IMAP servers
+
+C   Turn color off
+S   Save data
+Q   Quit
+
+Command >> quit
+
+
+
+
+
+
+
+
+
+
+
+
+SquirrelMail Configuration : Read: config.php
+Config version 1.4.0; SquirrelMail version unknown
+---------------------------------------------------------
+Main Menu --
+1.  Organization Preferences
+2.  Server Settings
+3.  Folder Defaults
+4.  General Options
+5.  Themes
+6.  Address Books
+7.  Message of the Day (MOTD)
+8.  Plugins
+9.  Database
+10. Languages
+
+D.  Set pre-defined settings for specific IMAP servers
+
+C   Turn color off
+S   Save data
+Q   Quit
+
+Command >> Q
+
+You have not saved your data.
+Save?  [Y/n]: y
+Data saved in config.php
+
+Exiting conf.pl.
+You might want to test your configuration by browsing to
+http://your-squirrelmail-location/src/configtest.php
+Happy SquirrelMailing!
+
+[root@spiderman config]# yum install epel-release -y
+Loaded plugins: fastestmirror, langpacks
+Loading mirror speeds from cached hostfile
+ * base: mirrors.nxtgen.com
+ * epel: mirrors.tuna.tsinghua.edu.cn
+ * extras: mirrors.nxtgen.com
+ * updates: mirrors.nxtgen.com
+Resolving Dependencies
+--> Running transaction check
+---> Package epel-release.noarch 0:7-11 will be updated
+---> Package epel-release.noarch 0:7-14 will be an update
+--> Finished Dependency Resolution
+
+Dependencies Resolved
+
+=========================================================================================================================================================
+ Package                                   Arch                                Version                           Repository                         Size
+=========================================================================================================================================================
+Updating:
+ epel-release                              noarch                              7-14                              epel                               15 k
+
+Transaction Summary
+=========================================================================================================================================================
+Upgrade  1 Package
+
+Total download size: 15 k
+Downloading packages:
+epel/x86_64/prestodelta                                                                                                           | 6.5 kB  00:00:06     
+epel-release-7-14.noarch.rpm                                                                                                      |  15 kB  00:00:01     
+Running transaction check
+Running transaction test
+Transaction test succeeded
+Running transaction
+  Updating   : epel-release-7-14.noarch                                                                                                              1/2 
+  Cleanup    : epel-release-7-11.noarch                                                                                                              2/2 
+  Verifying  : epel-release-7-14.noarch                                                                                                              1/2 
+  Verifying  : epel-release-7-11.noarch                                                                                                              2/2 
+
+Updated:
+  epel-release.noarch 0:7-14                                                                                                                             
+
+Complete!
+[root@spiderman config]# yum install repolist
+Loaded plugins: fastestmirror, langpacks
+Loading mirror speeds from cached hostfile
+ * base: mirrors.nxtgen.com
+ * epel: mirrors.thzhost.com
+ * extras: mirrors.nxtgen.com
+ * updates: mirrors.nxtgen.com
+No package repolist available.
+Error: Nothing to do
+[root@spiderman config]# yum install thunderbird -y
+Loaded plugins: fastestmirror, langpacks
+Loading mirror speeds from cached hostfile
+ * base: centos.mirror.net.in
+ * epel: epel.sg.ssimn.org
+ * extras: centos.mirror.net.in
+ * updates: centos.mirror.net.in
+Resolving Dependencies
+--> Running transaction check
+---> Package thunderbird.x86_64 0:115.8.0-1.el7.centos will be installed
+--> Processing Dependency: nss >= 3.90 for package: thunderbird-115.8.0-1.el7.centos.x86_64
+--> Processing Dependency: nspr >= 4.35 for package: thunderbird-115.8.0-1.el7.centos.x86_64
+--> Processing Dependency: libssl3.so(NSS_3.80)(64bit) for package: thunderbird-115.8.0-1.el7.centos.x86_64
+--> Processing Dependency: libsmime3.so(NSS_3.89)(64bit) for package: thunderbird-115.8.0-1.el7.centos.x86_64
+--> Processing Dependency: libnss3.so(NSS_3.79)(64bit) for package: thunderbird-115.8.0-1.el7.centos.x86_64
+--> Processing Dependency: libnss3.so(NSS_3.58)(64bit) for package: thunderbird-115.8.0-1.el7.centos.x86_64
+--> Processing Dependency: libnss3.so(NSS_3.55)(64bit) for package: thunderbird-115.8.0-1.el7.centos.x86_64
+--> Processing Dependency: libnss3.so(NSS_3.52)(64bit) for package: thunderbird-115.8.0-1.el7.centos.x86_64
+--> Processing Dependency: libnss3.so(NSS_3.47)(64bit) for package: thunderbird-115.8.0-1.el7.centos.x86_64
+--> Processing Dependency: libnss3.so(NSS_3.45)(64bit) for package: thunderbird-115.8.0-1.el7.centos.x86_64
+--> Running transaction check
+---> Package nspr.x86_64 0:4.21.0-1.el7 will be updated
+---> Package nspr.x86_64 0:4.35.0-1.el7_9 will be an update
+---> Package nss.x86_64 0:3.44.0-7.el7_7 will be updated
+--> Processing Dependency: nss = 3.44.0-7.el7_7 for package: nss-sysinit-3.44.0-7.el7_7.x86_64
+--> Processing Dependency: nss(x86-64) = 3.44.0-7.el7_7 for package: nss-tools-3.44.0-7.el7_7.x86_64
+---> Package nss.x86_64 0:3.90.0-2.el7_9 will be an update
+--> Processing Dependency: nss-util >= 3.90.0-1 for package: nss-3.90.0-2.el7_9.x86_64
+--> Processing Dependency: nss-softokn(x86-64) >= 3.90.0-1 for package: nss-3.90.0-2.el7_9.x86_64
+--> Processing Dependency: libnssutil3.so(NSSUTIL_3.82)(64bit) for package: nss-3.90.0-2.el7_9.x86_64
+--> Processing Dependency: libnssutil3.so(NSSUTIL_3.59)(64bit) for package: nss-3.90.0-2.el7_9.x86_64
+--> Running transaction check
+---> Package nss-softokn.x86_64 0:3.44.0-8.el7_7 will be updated
+---> Package nss-softokn.x86_64 0:3.90.0-6.el7_9 will be an update
+--> Processing Dependency: nss-softokn-freebl(x86-64) >= 3.90.0-6.el7_9 for package: nss-softokn-3.90.0-6.el7_9.x86_64
+---> Package nss-sysinit.x86_64 0:3.44.0-7.el7_7 will be updated
+---> Package nss-sysinit.x86_64 0:3.90.0-2.el7_9 will be an update
+---> Package nss-tools.x86_64 0:3.44.0-7.el7_7 will be updated
+---> Package nss-tools.x86_64 0:3.90.0-2.el7_9 will be an update
+---> Package nss-util.x86_64 0:3.44.0-4.el7_7 will be updated
+---> Package nss-util.x86_64 0:3.90.0-1.el7_9 will be an update
+--> Running transaction check
+---> Package nss-softokn-freebl.x86_64 0:3.44.0-8.el7_7 will be updated
+---> Package nss-softokn-freebl.x86_64 0:3.90.0-6.el7_9 will be an update
+--> Finished Dependency Resolution
+
+Dependencies Resolved
+
+=========================================================================================================================================================
+ Package                                  Arch                         Version                                       Repository                     Size
+=========================================================================================================================================================
+Installing:
+ thunderbird                              x86_64                       115.8.0-1.el7.centos                          updates                       110 M
+Updating for dependencies:
+ nspr                                     x86_64                       4.35.0-1.el7_9                                updates                       128 k
+ nss                                      x86_64                       3.90.0-2.el7_9                                updates                       905 k
+ nss-softokn                              x86_64                       3.90.0-6.el7_9                                updates                       383 k
+ nss-softokn-freebl                       x86_64                       3.90.0-6.el7_9                                updates                       321 k
+ nss-sysinit                              x86_64                       3.90.0-2.el7_9                                updates                        67 k
+ nss-tools                                x86_64                       3.90.0-2.el7_9                                updates                       557 k
+ nss-util                                 x86_64                       3.90.0-1.el7_9                                updates                        80 k
+
+Transaction Summary
+=========================================================================================================================================================
+Install  1 Package
+Upgrade             ( 7 Dependent packages)
+
+Total size: 113 M
+Total download size: 110 M
+Downloading packages:
+thunderbird-115.8.0-1.el7.centos.x86_64.rpm                                                                                       | 110 MB  00:09:29     
+Running transaction check
+Running transaction test
+Transaction test succeeded
+Running transaction
+  Updating   : nspr-4.35.0-1.el7_9.x86_64                                                                                                           1/15 
+  Updating   : nss-util-3.90.0-1.el7_9.x86_64                                                                                                       2/15 
+  Updating   : nss-softokn-freebl-3.90.0-6.el7_9.x86_64                                                                                             3/15 
+  Updating   : nss-softokn-3.90.0-6.el7_9.x86_64                                                                                                    4/15 
+  Updating   : nss-sysinit-3.90.0-2.el7_9.x86_64                                                                                                    5/15 
+  Updating   : nss-3.90.0-2.el7_9.x86_64                                                                                                            6/15 
+  Installing : thunderbird-115.8.0-1.el7.centos.x86_64                                                                                              7/15 
+  Updating   : nss-tools-3.90.0-2.el7_9.x86_64                                                                                                      8/15 
+  Cleanup    : nss-tools-3.44.0-7.el7_7.x86_64                                                                                                      9/15 
+  Cleanup    : nss-3.44.0-7.el7_7.x86_64                                                                                                           10/15 
+  Cleanup    : nss-sysinit-3.44.0-7.el7_7.x86_64                                                                                                   11/15 
+  Cleanup    : nss-softokn-3.44.0-8.el7_7.x86_64                                                                                                   12/15 
+  Cleanup    : nss-softokn-freebl-3.44.0-8.el7_7.x86_64                                                                                            13/15 
+  Cleanup    : nss-util-3.44.0-4.el7_7.x86_64                                                                                                      14/15 
+  Cleanup    : nspr-4.21.0-1.el7.x86_64                                                                                                            15/15 
+  Verifying  : nss-util-3.90.0-1.el7_9.x86_64                                                                                                       1/15 
+  Verifying  : nss-softokn-3.90.0-6.el7_9.x86_64                                                                                                    2/15 
+  Verifying  : nspr-4.35.0-1.el7_9.x86_64                                                                                                           3/15 
+  Verifying  : nss-sysinit-3.90.0-2.el7_9.x86_64                                                                                                    4/15 
+  Verifying  : thunderbird-115.8.0-1.el7.centos.x86_64                                                                                              5/15 
+  Verifying  : nss-softokn-freebl-3.90.0-6.el7_9.x86_64                                                                                             6/15 
+  Verifying  : nss-tools-3.90.0-2.el7_9.x86_64                                                                                                      7/15 
+  Verifying  : nss-3.90.0-2.el7_9.x86_64                                                                                                            8/15 
+  Verifying  : nss-sysinit-3.44.0-7.el7_7.x86_64                                                                                                    9/15 
+  Verifying  : nss-tools-3.44.0-7.el7_7.x86_64                                                                                                     10/15 
+  Verifying  : nss-3.44.0-7.el7_7.x86_64                                                                                                           11/15 
+  Verifying  : nss-util-3.44.0-4.el7_7.x86_64                                                                                                      12/15 
+  Verifying  : nspr-4.21.0-1.el7.x86_64                                                                                                            13/15 
+  Verifying  : nss-softokn-freebl-3.44.0-8.el7_7.x86_64                                                                                            14/15 
+  Verifying  : nss-softokn-3.44.0-8.el7_7.x86_64                                                                                                   15/15 
+
+Installed:
+  thunderbird.x86_64 0:115.8.0-1.el7.centos                                                                                                              
+
+Dependency Updated:
+  nspr.x86_64 0:4.35.0-1.el7_9        nss.x86_64 0:3.90.0-2.el7_9       nss-softokn.x86_64 0:3.90.0-6.el7_9 nss-softokn-freebl.x86_64 0:3.90.0-6.el7_9
+  nss-sysinit.x86_64 0:3.90.0-2.el7_9 nss-tools.x86_64 0:3.90.0-2.el7_9 nss-util.x86_64 0:3.90.0-1.el7_9   
+
+Complete!
+[root@spiderman config]# 

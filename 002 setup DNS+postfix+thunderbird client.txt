@@ -1,0 +1,363 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ Postfix Mail Server	-- SMTP	 -- 25 -- MTA
+ Dovecot: an IMAP and POP server
+
+SMTP		25
+POP3		110
+IMAP		143
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# yum install dovecot -y
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# vim /etc/dovecot/dovecot.conf
+protocols = imap pop3 lmtp # Line 24 - umcomment
+
+# line 30: uncomment and change ( if not use IPv6 )
+listen = *
+
+EPEL YUM
+`````````
+# yum install epel-release -y
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# vim /etc/dovecot/conf.d/10-master.conf
+
+# line 89-93: uncomment and add entry
+
+# Postfix smtp-auth
+unix_listener auth-userdb {
+    mode = 0666
+    user = postfix
+    group = postfix 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# vim /etc/dovecot/conf.d/10-auth.conf
+ 
+# line 10: uncomment and change ( allow plain text auth )
+disable_plaintext_auth = no
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# line 100: add
+auth_mechanisms = plain login
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# vim /etc/dovecot/conf.d/10-ssl.conf
+
+# line 8: change (not require SSL)
+ssl = no
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# vim /etc/dovecot/conf.d/10-mail.conf
+mail_location = maildir:~/Maildir # Line 24 - uncomment
+
+
+
+
+
+
+
+# systemctl enable dovecot
+# systemctl start dovecot
+# lsof -i:110
+# lsof -i:143
+____________________________________________
+
+
+
+
+
+
+
+
+
+
+
+
+
++++++++++++++++++++++++++++++++++++
+1) Squirrel Mail Web Client:
+`````````````````````````````
+
+
+
+
+
+
+
+
+
+
+# vim /etc/httpd/conf/httpd.conf
+
+Alias /webmail /usr/share/squirrelmail
+<Directory /usr/share/squirrelmail>
+	Options Indexes FollowSymLinks
+	RewriteEngine On
+	AllowOverride All
+	DirectoryIndex index.php
+	Order allow,deny
+	Allow from all
+</Directory>
+
+# systemctl restart httpd
+````
+
+# yum install squirrelmail -y
+
+
+
+
+
+
+
+
+
+
+
+# cd /usr/share/squirrelmail/config/
+
+# ./conf.pl
+1.  Organization Preferences
+5.  Signout Page           : /webmail
+2. Server Settings
+1.  Domain                 : demo.lab
+3.  Sendmail or SMTP       : smtp
+4.   SMTP Server           : mail.demo.lab
+Command >> 7
+Try to detect auth mechanisms? [y/N]: y
+none, login, plain, cram-md5, or digest-md5 [none]: login
+SMTP connections? [y/N]:n
+A. Update IMAP Settings
+4.  IMAP Server            : demo.lab
+8.  Server software        : dovecot
+9.  Delimiter              : detect
+B.  Update SMTP Settings
+4.   SMTP Server           : demo.lab
+S   Save data
+10. Languages
+
+
+
+2) Setup Thunderbird as mail client:
+````````````````````````````````````
+(Without root password ;)
+# yum install epel-release -y
+# yum repolist
+# yum install thunderbird -y
+_____________________________________________
+Digital Sign:
+
+Account Setting -> End-to-End
+_____________________________________________
+
+
+_______________
+Create virtual mails postfix:
+``````````````````````````````
+# vim /etc/postfix/main.cf
+virtual_alias_domains = demo.lab
+virtual_alias_maps = hash:/etc/postfix/virtual
+virtual_mailbox_base = /var/spool/mail
+
+# cd /etc/postfix/
+
+# cat > virtual
+root@demo.lab   root
+
+# postmap virtual
+
+# systemctl restart postfix
+# systemctl restart dovecot
++++++++++++++++++++++++++++++++++++
+Mail client:
+````````````
+# yum install mutt -y
+# touch /var/spool/mail/root
+# mutt

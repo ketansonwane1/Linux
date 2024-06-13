@@ -1,0 +1,32 @@
+x	.	x	.	x	.	x
+8bits		8bits		8bits		8bits
+0-255		0-255		0-255		0-255
+------>						<-----
+Network						Host
+
+
+8 bits = 2^0 + 2^1 + 2^2 + 2^3 + 2^4 + 2^5 + 2^6 + 2^7  => 255
+
+0-255:
+++++++
+0 	:[ Network IP ]
+
+255	:[Broadcast IP]
+
+127	:[Localhost]
+
+
+IP Classes:
+------------
+Class A		1-126		N.H.H.H/8
+
+Class B		128-191		N.N.H.H/16
+
+Class C		192-223		N.N.N.H/24
+-------------------------
+1) 10.0.2.3
+
+Class: A [N.H.H.H]
+Network IP: 10.0.0.0/8	[Convert Host bit to 0]
+Broadcast IP: 10.255.255.255 [Convert Host bit to 255]
+

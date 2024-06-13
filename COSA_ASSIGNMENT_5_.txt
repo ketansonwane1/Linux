@@ -1,0 +1,642 @@
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+**Create a script for the following task Make 100 directories name test1 to 100 Each directory should have a file in the following manner: 
+•	test1 should have file1
+•	test2 should have file2
+•	test100 should have file100
+Each file should have the content in the following manner: 
+•	file1 should have content 'This is file1'
+•	file2 should have content 'This is file2'
+•	file100 should have content 'This is file100'
+
+
+
+[ketan@spiderman ~]$ mkdir assignment
+[ketan@spiderman ~]$ cd assignment/
+[ketan@spiderman assignment]$ vim first
+
+#!/bin/bash
+for i in {1..100}; do
+    # Create directory
+    mkdir -p test$i
+    echo "This is file$i" > test$i/file$i
+done
+
+
+[ketan@spiderman assignment]$ bash first
+[ketan@spiderman assignment]$ ls
+first    test18  test28  test38  test48  test58  test68  test78  test88  test98
+test1    test19  test29  test39  test49  test59  test69  test79  test89  test99
+test10   test2   test3   test4   test5   test6   test7   test8   test9	 ketan
+test100  test20  test30  test40  neel	test50  test60  test70  test80  test90
+test11   test21  test31  ketan2	test41  test51  test61  test71  test81  test91
+test12   test22  test32  test42  test52  test62  test72  test82  test92
+test13   test23  test33  test43  test53  test63  test73  test83  test93
+test14   test24  ket	test34  test44  test54  test64  test74  test84  test94
+test15   test25  test35  test45  test55  test65  test75  test85  test95
+test16   test26  test36  test46  test56  test66  test76  test86  test96
+test17   test27  test37  test47  test57  test67  test77  test87  test97
+[ketan@spiderman assignment]$ cd test12
+[ketan@spiderman test12]$ ls
+file12
+[ketan@spiderman test12]$ cat file12
+This is file12
+[ketan@spiderman test12]$ cd ..
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+*Write a script which greet Good Morning to user.
+
+
+[ketan@spiderman assignment]$ vim greet
+
+#!/bin/bash
+echo "Enter Username"
+read u
+t=$(date +%H)
+if [ "$t" -lt 12 ]; then
+    echo "Good Morning, $u!"
+else
+    echo "It's no longer morning, $u"
+fi
+
+[ketan@spiderman assignment]$ bash greet
+Enter Username
+ketan
+It's no longer morning, ketan
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+*Write a script which checks entered no is positive or not. If it is positive, it 
+checks that number is in range from 30 to 50 or not.
+
+
+[ketan@spiderman assignment]$ vim number
+
+#!/bin/bash
+echo "Enter any number"
+read num
+if [ "$num" -gt 0 ]; then
+    echo "$number is positive."
+    if [ "$num" -ge 30 ] && [ "$num" -le 50 ]; then
+        echo "$num is within the range of  30 to 50."
+    else
+        echo "$number not within the range from 30 to 50."
+    fi
+elif [ "$num" -eq 0 ]; then
+    echo "$num is 0"
+else
+    echo "$num is Negetive"
+fi
+
+[ketan@spiderman assignment]$ bash number
+Enter any number
+56
+ is positive.
+ not within the range from 30 to 50.
+[ketan@spiderman assignment]$ bash number
+Enter any number
+23
+ is positive.
+ not within the range from 30 to 50.
+[ketan@spiderman assignment]$ bash number
+Enter any number
+34
+ is positive.
+34 is within the range of  30 to 50.
+[ketan@spiderman assignment]$ bash number
+Enter any number
+-5
+-5 is Negetive
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Write a calculator script.
+
+#!/bin/bash
+    echo "Select operation:"
+    echo "1. Addition"
+    echo "2. Subtraction"
+    echo "3. Multiplication"
+    echo "4. Division"
+    echo "5. Exit"
+while true;do
+    echo ""Enter Choice 
+    read c
+    case $c in
+        1)
+            read -p "Enter first number: " num1
+            read -p "Enter second number: " num2
+            echo "Result $(( num1 + num2 ))"
+            ;;
+        2)
+            read -p "Enter first number: " num1
+            read -p "Enter second number: " num2
+            echo "Result: $(( $num1 -  $num2 ))"
+            ;;
+        3)
+            read -p "Enter first number: " num1
+            read -p "Enter second number: " num2
+            echo "Result: $(( $num1 * $num2 ))"
+            ;;
+        4)
+            read -p "Enter first number: " num1
+            read -p "Enter second number: " num2
+            echo "Result: $(( $num1 / $num2 ))"
+            ;;
+        *)
+            echo "Invalid choice"
+            ;;
+    esac
+done
+
+[ketan@spiderman ~]$ bash number
+Select operation:
+1. Addition
+2. Subtraction
+3. Multiplication
+4. Division
+5. Exit
+Enter Choice
+1
+Enter first number: 12
+Enter second number: 12
+Result 24
+Enter Choice
+2
+Enter first number: 12
+Enter second number: 6
+Result: 6
+Enter Choice
+3
+Enter first number: 12
+Enter second number: 12
+Result: 144
+Enter Choice
+4
+Enter first number: 120
+Enter second number: 2
+Result: 60
+Enter Choice
+5
+Invalid choice
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+>.*Create a script that asks for a path and tell if the entered path is a file or directroy or 
+doesnt exist.If File or directroy exists print numeric file permission.
+
+
+#!/bin/bash
+
+# Prompt user for a path
+echo "Enter a path:"
+read path
+
+# Check if the path exists
+if [ -e "$path" ]; then
+    # Check if it's a file
+    if [ -f "$path" ]; then
+        echo "The entered path is a file."
+        # Print numeric file permissions
+        echo "Numeric file permissions: $(stat -c '%a' "$path")"
+    # Check if it's a directory
+    elif [ -d "$path" ]; then
+        echo "The entered path is a directory."
+        # Print numeric directory permissions
+        echo "Numeric directory permissions: $(stat -c '%a' "$path")"
+    else
+        echo "The entered path exists but is neither a file nor a directory."
+    fi
+else
+    echo "The entered path does not exist."
+fi
+
+[ketan@spiderman ~]$ bash path.sh
+Enter a path:
+/home/user/Documents/file.txt
+The entered path is a file.
+Numeric file permissions: 644
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+>. Write a script which check enterd user exists or not. If exists, display uid, gid and default
+   Shell.
+
+#!/bin/bash
+
+read -p "Enter username: " username
+
+# Check if the user exists
+if id "$username" &>/dev/null; then
+    # If the user exists, display UID, GID, and default shell
+    uid=$(id -u "$username")
+    gid=$(id -g "$username")
+    shell=$(getent passwd "$username" | cut -d: -f7)
+    echo "User $username exists:"
+    echo "UID: $uid"
+    echo "GID: $gid"
+    echo "Default Shell: $shell"
+else
+    echo "User $username does not exist."
+fi
+[root@spiderman ~]$ useradd neel
+[root@spiderman ~]$ bash userAuth.sh
+Enter username: neel
+User neel exists:
+UID: 1001
+GID: 1001
+Default Shell: /bin/bash
+[root@spiderman ~]$ bash userAuth.sh
+Enter username: neel2
+User neel2 does not exists
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+Q. Create script which create 50 users named as 'cdac_test_1' to 'cdac_test_50' with password as username. And create a file for alternate users starting from 1 in /tmp from root user name as 'username_flag.txt' and the data should be "username:CDAC'
+
+
+#!/bin/bash
+
+# Loop to create 50 users
+for ((i=1; i<=50; i++))
+do
+    username="cdac_test_$i"
+    password="$username"
+
+    # Create user with username and set password
+    echo "Creating the user: $username"
+    useradd -m -s /bin/bash "$username"
+    echo "$username:$password" | chpasswd
+    echo "User '$username' created with password '$password'"
+
+    # Check if the user number is odd
+    if [ $((i % 2)) -eq 1 ]; then
+        # Create file with username_flag.txt for alternate users starting from 1
+        file_name="/tmp/$username_flag.txt"
+        echo "Creating file: $file_name"
+        echo "$username:CDAC" > "$file_name"
+        echo "File '$file_name' created with content '$username:CDAC'"
+    fi
+done
+
+[root@spiderman ~]$ bash userCreation.sh
+
+Creating the user: cdac_test_1
+User 'cdac_test_1' created with password 'cdac_test_1'
+Creating file: /tmp/cdac_test_1_flag.txt
+File '/tmp/cdac_test_1_flag.txt' created with content 'cdac_test_1:CDAC'
+Creating the user: cdac_test_2
+User 'cdac_test_2' created with password 'cdac_test_2'
+Creating file: /tmp/cdac_test_2_flag.txt
+File '/tmp/cdac_test_2_flag.txt' created with content 'cdac_test_2:CDAC'
+Creating the user: cdac_test_3
+User 'cdac_test_3' created with password 'cdac_test_3'
+Creating file: /tmp/cdac_test_3_flag.txt
+File '/tmp/cdac_test_3_flag.txt' created with content 'cdac_test_3:CDAC'
+Creating the user: cdac_test_4
+User 'cdac_test_4' created with password 'cdac_test_4'
+Creating file: /tmp/cdac_test_4_flag.txt
+File '/tmp/cdac_test_4_flag.txt' created with content 'cdac_test_4:CDAC'
+Creating the user: cdac_test_5
+User 'cdac_test_5' created with password 'cdac_test_5'
+Creating file: /tmp/cdac_test_5_flag.txt
+File '/tmp/cdac_test_5_flag.txt' created with content 'cdac_test_5:CDAC'
+Creating the user: cdac_test_6
+User 'cdac_test_6' created with password 'cdac_test_6'
+Creating file: /tmp/cdac_test_6_flag.txt
+File '/tmp/cdac_test_6_flag.txt' created with content 'cdac_test_6:CDAC'
+Creating the user: cdac_test_7
+User 'cdac_test_7' created with password 'cdac_test_7'
+Creating file: /tmp/cdac_test_7_flag.txt
+File '/tmp/cdac_test_7_flag.txt' created with content 'cdac_test_7:CDAC'
+Creating the user: cdac_test_8
+User 'cdac_test_8' created with password 'cdac_test_8'
+Creating file: /tmp/cdac_test_8_flag.txt
+File '/tmp/cdac_test_8_flag.txt' created with content 'cdac_test_8:CDAC'
+
+//////////////////////////////                ////////////////////////////////
+
+
+Creating the user: cdac_test_50
+User 'cdac_test_50' created with password 'cdac_test_50'
+Creating file: /tmp/cdac_test_50_flag.txt
+File '/tmp/cdac_test_50_flag.txt' created with content 'cdac_test_50:CDAC'
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Q. Script :::: Create a script /root/myscript.sh that should print "redhat" when user input "fedora" as argument, & vice-versa, it should print "redhat|fedora" without argument.
+
+
+#!/bin/bash
+
+if [ "$1" = "fedora" ]; then
+    echo "redhat"
+elif [ "$1" = "redhat" ]; then
+    echo "fedora"
+else
+    echo "redhat|fedora"
+fi
+
+[ketan@spiderman ~]$ bash myscript.sh
+redhat|fedora
+[ketan@spiderman ~]$ bash myscript.sh fedora
+redhat
+[ketan@spiderman ~]$ bash myscript.sh redhat
+fedora
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+[ketan@spiderman ~]$ vim menu
+
+#!/bin/bash
+while true; do
+    echo "   "
+    echo "1. Create a file"
+    echo "2. Display contents"
+    echo "3. Copy the file"
+    echo "4. Rename the file"
+    echo "5. Delete the file"
+    echo "6. Line count of File"
+    echo "7. Write data to file"
+    echo "8. Search pattern"
+    echo "9. Create directory"
+    echo "10. Exit"
+    echo "Enter your option:"
+    read option
+
+    case $option in
+        1)
+            echo "Enter file name:"
+            read filename
+            if [ -e "$filename" ]; then
+                echo "Error: File already exists."
+            else
+                echo "Enter data (Press Ctrl+D to save and exit):"
+                cat > "$filename"
+            fi
+            ;;
+        2)
+            echo "Enter file name:"
+            read filename
+            if [ -e "$filename" ]; then
+                cat "$filename"
+            else
+                echo "Error: File does not exist."
+            fi
+            ;;
+        3)
+            echo "Enter source file name:"
+            read sourcefile
+            echo "Enter target file name:"
+            read targetfile
+            if [ -e "$sourcefile" ]; then
+                if [ ! -e "$targetfile" ]; then
+                    cp "$sourcefile" "$targetfile"
+                    echo "File copied successfully."
+                else
+                    echo "Error: Target file already exists."
+                fi
+            else
+                echo "Error: Source file does not exist."
+            fi
+            ;;
+        4)
+            echo "Enter source file name:"
+            read sourcefile
+            echo "Enter target file name:"
+            read targetfile
+            if [ -e "$sourcefile" ]; then
+                if [ ! -e "$targetfile" ]; then
+                    mv "$sourcefile" "$targetfile"
+                    echo "File renamed successfully."
+                else
+                    echo "Error: Target file already exists."
+                fi
+            else
+                echo "Error: Source file does not exist."
+            fi
+            ;;
+        5)
+            echo "Enter file name:"
+            read filename
+            if [ -e "$filename" ]; then
+                echo "Are you sure you want to delete $filename? (y/n)"
+                read confirmation
+                if [ "$confirmation" == "y" ]; then
+                    rm "$filename"
+                    echo "File deleted successfully."
+                fi
+            else
+                echo "Error: File does not exist."
+            fi
+            ;;
+        6)
+            echo "Enter file name:"
+            read filename
+            if [ -e "$filename" ]; then
+                echo "Line count:"
+                wc -l < "$filename"
+            else
+                echo "Error: File does not exist."
+            fi
+            ;;
+        7)
+            echo "Enter file name:"
+            read filename
+            echo "Enter data to append:"
+            read data
+            if [ -e "$filename" ]; then
+                echo "$data" >> "$filename"
+                echo "Data appended successfully."
+            else
+                echo "Creating new file..."
+                echo "$data" > "$filename"
+                echo "Data written to new file."
+            fi
+            ;;
+        8)
+            echo "Enter file name:"
+            read filename
+            echo "Enter search string:"
+            read search
+            if [ -e "$filename" ]; then
+                grep "$search" "$filename" || echo "Search string not found."
+            else
+                echo "Error: File does not exist."
+            fi
+            ;;
+        9)
+            echo "Enter directory name:"
+            read dirname
+            if [ ! -d "$dirname" ]; then
+                mkdir "$dirname"
+                echo "Directory created successfully."
+            else
+                echo "Error: Directory already exists."
+            fi
+            ;;
+        10)
+            echo "Exiting..."
+            exit 0
+            ;;
+        *)
+            echo "Invalid option. Please select a number between 1 and 10."
+            ;;
+    esac
+done
+ 
+[ketan@spiderman ~]$ bash menu
+   
+1. Create a file
+2. Display contents
+3. Copy the file
+4. Rename the file
+5. Delete the file
+6. Line count of File
+7. Write data to file
+8. Search pattern
+9. Create directory
+10. Exit
+Enter your option:
+1
+Enter file name:
+ketan
+Enter data (Press Ctrl+D to save and exit):
+ketan is good boy
+   
+1. Create a file
+2. Display contents
+3. Copy the file
+4. Rename the file
+5. Delete the file
+6. Line count of File
+7. Write data to file
+8. Search pattern
+9. Create directory
+10. Exit
+Enter your option:
+2
+Enter file name:
+ketan
+ketan is good boy
+   
+1. Create a file
+2. Display contents
+3. Copy the file
+4. Rename the file
+5. Delete the file
+6. Line count of File
+7. Write data to file
+8. Search pattern
+9. Create directory
+10. Exit
+Enter your option:
+3
+Enter source file name:
+ketan
+Enter target file name:
+neel
+File copied successfully.
+   
+1. Create a file
+2. Display contents
+3. Copy the file
+4. Rename the file
+5. Delete the file
+6. Line count of File
+7. Write data to file
+8. Search pattern
+9. Create directory
+10. Exit
+Enter your option:
+5
+Enter file name:
+neel
+Are you sure you want to delete neel? (y/n)
+y
+File deleted successfully.
+   
+1. Create a file
+2. Display contents
+3. Copy the file
+4. Rename the file
+5. Delete the file
+6. Line count of File
+7. Write data to file
+8. Search pattern
+9. Create directory
+10. Exit
+Enter your option:
+6
+Enter file name:
+ketan
+Line count:
+1
+   
+1. Create a file
+2. Display contents
+3. Copy the file
+4. Rename the file
+5. Delete the file
+6. Line count of File
+7. Write data to file
+8. Search pattern
+9. Create directory
+10. Exit
+Enter your option:
+7
+Enter file name:
+ketan
+Enter data to append:
+hii good morning/afternoon/night
+Data appended successfully.
+   
+1. Create a file
+2. Display contents
+3. Copy the file
+4. Rename the file
+5. Delete the file
+6. Line count of File
+7. Write data to file
+8. Search pattern
+9. Create directory
+10. Exit
+Enter your option:
+8
+Enter file name:
+ketan
+Enter search string:
+night
+hii good morning/afternoon/night
+   
+1. Create a file
+2. Display contents
+3. Copy the file
+4. Rename the file
+5. Delete the file
+6. Line count of File
+7. Write data to file
+8. Search pattern
+9. Create directory
+10. Exit
+Enter your option:
+9
+Enter directory name:
+ditiss1
+Directory created successfully.
+   
+1. Create a file
+2. Display contents
+3. Copy the file
+4. Rename the file
+5. Delete the file
+6. Line count of File
+7. Write data to file
+8. Search pattern
+9. Create directory
+10. Exit
+Enter your option:
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+

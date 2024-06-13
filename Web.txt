@@ -1,0 +1,232 @@
+Web Hosting
+
+''''''''''''''''''''''''''''''''''''''''''''' 
+At Server Side
+''''''''''''''''''''''''''''''''''''''''''''' 
+
+Install Apache httpd service
+[root@fire ~]# yum install httpd -y
+
+
+Start httpd service
+[root@fire ~]# systemctl start httpd
+
+Check httpd service
+[root@fire ~]# systemctl status httpd
+
+Enable httpd service
+[root@fire ~]# systemctl enable httpd
+
+
+
+''''''''''''''''''''''''''''''''''''''''''''' 
+Dedicated Hosting: Running one website on single IP 
+''''''''''''''''''''''''''''''''''''''''''''' 
+[root@fire ~]# cd /var/www/html/
+[root@fire html]# cat > index.html
+<html>
+<body>
+<h1>Dedicated Hosting</h1>
+</body>
+</html>
+
+
+''''''''''''''''''''''''''''''''''''''''''''' 
+Shared Hosting: Running multiple website on single IP 
+''''''''''''''''''''''''''''''''''''''''''''' 
+
+Add new zone for new domain
+[root@fire /]# vim /etc/named.conf 
+//
+// named.conf
+//
+.
+.
+.
+zone "coal.com" IN {
+        type master;
+        file "for.coal.com";
+};
+~
+~
+:wq
+
+Copy existing forward zone file of any domain and rename it to new domain
+[root@fire /]# cp -av /var/named/for.fire.com /var/named/for.coal.com
+‘/var/named/for.fire.com’ -> ‘/var/named/for.coal.com’
+
+
+Edit the forward zone file of new domain
+[root@fire /]# vim /var/named/for.coal.com
+$TTL 1D
+@       IN SOA  server.coal.com. user@gmail.com. (
+                                        0       ; serial
+                                        1D      ; refresh
+                                        1H      ; retry
+                                        1W      ; expire
+                                        3H )    ; minimum
+@ IN    NS      server.coal.com.
+coal.com.       IN      A       192.168.25.128
+server.coal.com. IN      A       192.168.25.128
+www.coal.com.   IN      A       192.168.25.128
+~                                                                               
+~                                                                               
+:wq
+
+Restart named service
+[root@fire /]# systemctl restart named
+
+Check if zones are working or not using host command
+[root@fire /]# host -t a coal.com
+coal.com has address 192.168.25.128
+[root@fire /]# host -t a master.fire.com
+master.fire.com has address 192.168.25.128
+
+
++++++++++++++++++++++++++++++++++++++++++++++ * +++++++++++++++++++++++++++++++++++++++++++++
+ 
+
+''''''''''''''''''''''''''''''''''''''''''''' 
+Shared Hosting (with security): Running multiple website on single IP 
+''''''''''''''''''''''''''''''''''''''''''''' 
+
+Make a sample webpage directory in /var/www/html directory eg. fire.com ---> /var/www/html/fire.com/index.html
+vim /var/www/html/fire.com/index.html
+<html>
+<title> Fire </title>
+<body>
+<h1> FIRE </h1>
+<h2> A rapid burning of combustible material in the presence of oxygen manifested as flames. </h2>
+</body>
+</html>
+
+Make two directories sites-availabe (to store Apache virtual host configuration file) and sites-enabled (to store symbolic links to virtual hosts, to enable the configuration file)
+[root@fire ~]# mkdir /etc/httpd/sites-available
+[root@fire ~]# mkdir /etc/httpd/sites-enabled
+
+Add hosting directory in httpd
+[root@fire ~]# vim /etc/httpd/conf/httpd.conf
+#
+# Specify a default charset for all content served; this enables
+# interpretation of all content as UTF-8 by default.  To use the 
+# default browser choice (ISO-8859-1), or to allow the META tags
+# in HTML content to override this choice, comment out this
+# directive:
+#
+.
+.
+.
+# Supplemental configuration
+#
+# Load config files in the "/etc/httpd/conf.d" directory, if any.
+IncludeOptional conf.d/*.conf
+IncludeOptional sites-enabled/*.conf
+~
+:wq
+
+Add website configuration file in sites-available
+[root@fire ~]# vim /etc/httpd/sites-available/fire.conf
+<VirtualHost *:80>
+	ServerName fire.com
+	ServerAlias www.fire.com
+	DocumentRoot /var/www/html/fire.com/
+	ErrorLog /var/log/httpd/fire_error_log
+	CustomLog /var/log/httpd/fire_access_log combined
+</VirtualHost>
+~
+~
+:wq
+
+Create soft link of website configuration file in sites-available to 
+[root@fire ~]# ln -s /etc/httpd/sites-available/fire.conf /etc/httpd/sites-enabled/fire.conf
+
+Test Configuration files
+[root@fire ~]# httpd -t
+
+To confirm that we loaded the virtual hosts.
+[root@fire ~]# httpd -S
+
+
+
++++++++++++++++++++++++++++++++++++++++++++++ * +++++++++++++++++++++++++++++++++++++++++++++
+ 
+
+''''''''''''''''''''''''''''''''''''''''''''' 
+Virtual Hosting 
+''''''''''''''''''''''''''''''''''''''''''''' 
+Create forward zone in named configuration file
+[root@fire ~]# vim /etc/named.conf 
+//
+// named.conf
+//
+.
+.
+.
+zone "oil.com" IN {
+        type master;
+        file "for.oil.com";
+};
+~
+~
+:wq
+
+Copy forward zone file for new website from old one
+[root@fire ~]# cp -av /var/named/for.coal.com /var/named/for.oil.com
+‘/var/named/for.coal.com’ -> ‘/var/named/for.oil.com’
+
+Edit forward zone file for new website
+[root@fire ~]# vim /var/named/for.oil.com
+$TTL 1D
+@       IN SOA  server.oil.com. user@gmail.com. (
+                                        0       ; serial
+                                        1D      ; refresh
+                                        1H      ; retry
+                                        1W      ; expire
+                                        3H )    ; minimum
+@ IN    NS      server.oil.com.
+oil.com.       IN      A       192.168.25.128
+server.oil.com. IN      A       192.168.25.128
+www.oil.com.   IN      A       192.168.25.128
+~                                                                               
+~                                                                               
+:wq
+
+Restart named service
+[root@fire ~]# systemctl restart named
+Check if we can resolve hostname to ip
+[root@fire ~]# host oil.com
+oil.com has address 192.168.25.128
+
+Copy existing domain configuration file to new
+[root@fire ~]# cp -av /etc/httpd/sites-available/fire.conf /etc/httpd/sites-available/oil.conf
+‘/etc/httpd/sites-available/fire.conf’ -> ‘/etc/httpd/sites-available/oil.conf’
+
+Edit new domain configuration file
+[root@fire named]# vim /etc/httpd/sites-available/oil.conf
+<VirtualHost *:80>
+	ServerName oil.com
+	ServerAlias www.oil.com
+	DocumentRoot /var/www/html/oil.com/
+	ErrorLog /var/log/httpd/oil_error_log
+	CustomLog /var/log/httpd/oil_access_log combined
+</VirtualHost>
+
+Create a directory in /var/www/html where u want to host website
+[root@fire named]# mkdir /var/www/html/oil.com
+
+Create a sample web page in /var/www/html/oil.com 
+[root@fire named]# cat > /var/www/html/oil.com/index.html 
+<html>
+<title> OIL </title>
+<body>
+<h1> OIL </h1>
+<h2> An oil is any nonpolar chemical substance that is composed primarily of hydrocarbons and is hydrophobic and lipophilic. Oils are usually flammable and surface active. Most oils are unsaturated lipids that are liquid at room temperature.  </h2>
+</body>
+</html>
+
+Create soft link of website configuration file in sites-available to sites-enabled
+[root@fire named]# ln -s /etc/httpd/sites-available/oil.conf /etc/httpd/sites-enabled/oil.conf
+
+Restart httpd service
+[root@fire named]# systemctl restart httpd
+

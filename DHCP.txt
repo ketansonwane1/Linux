@@ -1,0 +1,51 @@
+DHCP:
+`````
+# yum -y install dhcp
+
+
+
+
+
+
+
+
+
+# cp -av /usr/share/doc/dhcp-4.2.5/dhcpd.conf.example /etc/dhcp/dhcpd.conf
+
+# vim /etc/dhcp/dhcpd.conf
+
+
+
+
+
+
+
+
+
+option domain-name     "sniper.com";
+option domain-name-servers    server.sniper.com;
+default-lease-time 600;
+max-lease-time 7200;
+
+authoritative;
+allow bootp;
+
+subnet 192.168.1.0 netmask 255.255.255.0 {
+    range dynamic-bootp 192.168.1.1 192.168.1.100;
+    option broadcast-address 192.168.1.255;
+    option routers 192.168.1.254;
+}
+
+:wq
+
+# systemctl start dhcpd
+# systemctl enable dhcpd
++++++++++++++++++++++++++++++++++++++++++++++++++
+Configure DHCP Client
+``````````````````````
+# nmtui
+
+OR
+
+# dhclient
+

@@ -1,0 +1,147 @@
+[root@master ~]# yum install bind bind-utils -y
+Loaded plugins: fastestmirror, langpacks
+Loading mirror speeds from cached hostfile
+epel/x86_64/metalink                                                                                                              | 7.7 kB  00:00:00     
+ * base: mirrors.nxtgen.com
+ * epel: mirror.citrahost.com
+ * extras: mirrors.nxtgen.com
+ * updates: mirrors.nxtgen.com
+base                                                                                                                              | 3.6 kB  00:00:00     
+epel                                                                                                                              | 4.7 kB  00:00:00     
+extras                                                                                                                            | 2.9 kB  00:00:00     
+updates                                                                                                                           | 2.9 kB  00:00:00     
+(1/2): epel/x86_64/updateinfo                                                                                                     | 1.0 MB  00:00:01     
+(2/2): epel/x86_64/primary_db                                                                                                     | 7.0 MB  00:00:03     
+Package 32:bind-9.11.4-26.P2.el7_9.15.x86_64 already installed and latest version
+Package 32:bind-utils-9.11.4-26.P2.el7_9.15.x86_64 already installed and latest version
+Nothing to do
+[root@master ~]# vim /etc/named.conf
+
+[1]+  Stopped                 vim /etc/named.conf
+[root@master ~]# vim /etc/named.conf
+[root@master ~]# cd /var/named/
+[root@master named]# cp -av named.localhost for monster.com.
+cp: target ‘monster.com.’ is not a directory
+[root@master named]# cp -av named.localhost for.monster.com
+‘named.localhost’ -> ‘for.monster.com’
+[root@master named]# cp -av named.localhost for.monster.com.
+‘named.localhost’ -> ‘for.monster.com.’
+[root@master named]# vim for.monster.com
+[root@master named]# cp -av for.monster.com rev.monster.com.
+‘for.monster.com’ -> ‘rev.monster.com.’
+[root@master named]# vim rev.monster.com
+[root@master named]# vim rev.monster.com
+[root@master named]# vim for.monster.com
+[root@master named]# vim /etc/named.conf
+[root@master named]# vim rev.monster.com
+[root@master named]# vim /etc/named.conf
+[root@master named]# vim rev.monster.com
+[root@master named]# ls
+data     for.ditiss.com   for.monster.com.  named.ca     named.localhost  rev.monster.com.  slaves
+dynamic  for.monster.com  for.sniper.com    named.empty  named.loopback   rev.sniper.com
+[root@master named]# vim for.
+for.ditiss.com    for.monster.com   for.monster.com.  for.sniper.com    
+[root@master named]# vim for.monster.com
+
+[2]+  Stopped                 vim for.monster.com
+[root@master named]# vim rev.monster.com
+
+[3]+  Stopped                 vim rev.monster.com
+[root@master named]# vim rev.monster.com.
+
+[4]+  Stopped                 vim rev.monster.com.
+[root@master named]# mv rev.monster.com. rev.monster.com
+[root@master named]# ls
+data     for.ditiss.com   for.monster.com.  named.ca     named.localhost  rev.monster.com  slaves
+dynamic  for.monster.com  for.sniper.com    named.empty  named.loopback   rev.sniper.com
+[root@master named]# vim rev.monster.com
+[root@master named]# vim rev.monster.com
+[root@master named]# vim for.monster.com
+[root@master named]# vim rev.monster.com
+[root@master named]# systemctl restart named
+[root@master named]# systemcyl enable named
+bash: systemcyl: command not found...
+[root@master named]# systemctl enable named
+[root@master named]# firewall-cmd --zone=public --add-service=dns --permanent
+Warning: ALREADY_ENABLED: dns
+success
+[root@master named]# firewall-cmd --reload
+success
+[root@master named]# firewall-cmd --list
+usage: see firewall-cmd man page
+firewall-cmd: error: ambiguous option: --list could match --list-lockdown-whitelist-contexts, --list-all, --list-lockdown-whitelist-uids, --list-ports, --list-source-ports, --list-lockdown-whitelist-users, --list-icmp-blocks, --list-interfaces, --list-rich-rules, --list-forward-ports, --list-services, --list-lockdown-whitelist-commands, --list-all-zones, --list-sources, --list-protocols
+[root@master named]# firewall-cmd --list-all
+public (active)
+  target: default
+  icmp-block-inversion: no
+  interfaces: ens33
+  sources: 
+  services: dhcpv6-client dns http samba ssh
+  ports: 80/tcp 443/tcp 8080/tcp 8443/tcp
+  protocols: 
+  masquerade: no
+  forward-ports: 
+  source-ports: 
+  icmp-blocks: 
+  rich rules: 
+	
+[root@master named]# host -t a monster.com
+monster.com has no A record
+[root@master named]# nslookup monster.com
+Server:		192.168.25.139
+Address:	192.168.25.139#53
+
+*** Can't find monster.com: No answer
+
+[root@master named]# vim for.monster.com
+[root@master named]# vim for.monster.com
+[root@master named]# host -t a monster.com
+monster.com has no A record
+[root@master named]# vim for.monster.com
+[root@master named]# vim rev.monster.com
+[root@master named]# vim rev.monster.com
+[root@master named]# host -t a monster.com
+monster.com has no A record
+[root@master named]# vim rev.monster.com
+[root@master named]# vim rev.monster.com.
+[root@master named]# host -t a monster.com.
+monster.com has no A record
+[root@master named]# host -t a monster.com
+monster.com has no A record
+[root@master named]# vim for.monster.com
+[root@master named]# vim rev.monster.com
+[root@master named]# vim /etc/named.conf
+[root@master named]# host -t a monster.com
+monster.com has no A record
+[root@master named]# nslookup monster.com
+Server:		192.168.25.139
+Address:	192.168.25.139#53
+
+*** Can't find monster.com: No answer
+
+[root@master named]# host -t a 192.168.25.139
+139.25.168.192.in-addr.arpa domain name pointer master.monster.com.25.168.192.in-addr.arpa.
+[root@master named]# nslookup 192.168.25.139
+139.25.168.192.in-addr.arpa	name = master.monster.com.25.168.192.in-addr.arpa.
+
+[root@master named]# firewall-cmd --zone=public --add-service=dns --permanent
+Warning: ALREADY_ENABLED: dns
+success
+[root@master named]# systemctl-cmd --reload
+bash: systemctl-cmd: command not found...
+[root@master named]# firewall-cmd --reload
+success
+[root@master named]# host -t a monster.com
+monster.com has no A record
+[root@master named]# host -t ns  monster.com
+monster.com name server master.monster.com.
+[root@master named]# host -t ptr monster.com
+monster.com has no PTR record
+[root@master named]# host -t ns monster.com
+monster.com name server master.monster.com.
+[root@master named]# host -t a monster.com
+monster.com has no A record
+[root@master named]# systemctl restart named
+[root@master named]# systemctl enable named
+[root@master named]# host -t a monster.com
+monster.com has address 192.168.25.139

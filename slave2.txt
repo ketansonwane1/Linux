@@ -1,0 +1,203 @@
+[spiderman@master ~]$ su -
+Password: 
+Last login: Sat Mar 16 02:11:19 IST 2024 on pts/0
+[root@master ~]# vim /etc/named.conf
+[root@master ~]# history
+    1  clear
+    2  nmtui
+    3  su -
+    4  ditiss@1234567
+    5  clear
+    6  ifconfig 
+    7  hostname
+    8  vim /etc/named.conf
+    9  history 
+   10  cp -av /etc/named.conf.rpmnew /etc/named.conf
+   11  vim /etc/named.conf
+   12  clear
+   13  nmtui
+   14  vim /etc/named.conf
+   15  cd /var/named
+   16  cp -av named.localhost for.sniper.com
+   17  vim for.sniper.com
+   18  cp -av named.localhost rev.sniper.com
+   19  vim rev.sniper.com
+   20  systemctl restart named
+   21  journalctl -xe
+   22  vim for.sniper.com
+   23  systemctl restart named
+   24  vim rev.sniper.com
+   25  systemctl restart named
+   26  ll
+   27  vim for.sniper.com 
+   28  vim rev.sniper.com 
+   29  systemctl restart named
+   30  systemctl status named
+   31  vim /etc/named.conf
+   32  systemctl restart named
+   33  systemctl status named
+   34  vim /etc/named.conf
+   35  systemctl restart named
+   36  systemctl status named
+   37  vim /etc/named.conf
+   38  systemctl restart named
+   39  systemctl status named
+   40  vim /etc/named.conf
+   41  systemctl status named
+   42  vim /etc/named.conf
+   43  vim for.sniper.com 
+   44  systemctl status named
+   45  systemctl restart named
+   46  systemctl status named
+   47  vim /etc/named.conf
+   48  vim rev.sniper.com 
+   49  systemctl restart named
+   50  systemctl reload named
+   51  firewall-cmd --zone=public --add-service=dns --permanent 
+   52  firewall-cmd --reload
+   53  nslookup monster.com
+   54  systemctl status named
+   55  nslookup monster.com
+   56  nmtui
+   57  nslookup monster.com
+   58  ifconfig
+   59  vim /etc/named.conf
+   60  nslookup sniper.com
+   61  vim /etc/named.conf
+   62  history
+[root@master ~]# nmtui
+[root@master ~]# nmtui
+[root@master ~]# vim /etc/named.conf
+[root@master ~]# vim for.sniper.com 
+[root@master ~]# cp -av named.localhost for.sniper.com 
+cp: cannot stat ‘named.localhost’: No such file or directory
+[root@master ~]# cp -av named.localhost for.sniper.com 
+cp: cannot stat ‘named.localhost’: No such file or directory
+[root@master ~]# cd /var/named
+[root@master named]# cp -av named.localhost for.sniper.com 
+cp: overwrite ‘for.sniper.com’? yes
+‘named.localhost’ -> ‘for.sniper.com’
+[root@master named]# vim for.sniper.com 
+[root@master named]# vim rev.sniper.com 
+[root@master named]# systemctl status named
+● named.service - Berkeley Internet Name Domain (DNS)
+   Loaded: loaded (/usr/lib/systemd/system/named.service; disabled; vendor preset: disabled)
+   Active: inactive (dead)
+[root@master named]# systemctl enabled named
+Unknown operation 'enabled'.
+[root@master named]# systemctl status named
+● named.service - Berkeley Internet Name Domain (DNS)
+   Loaded: loaded (/usr/lib/systemd/system/named.service; disabled; vendor preset: disabled)
+   Active: inactive (dead)
+[root@master named]# systemctl restart named
+[root@master named]# systemctl status named
+● named.service - Berkeley Internet Name Domain (DNS)
+   Loaded: loaded (/usr/lib/systemd/system/named.service; disabled; vendor preset: disabled)
+   Active: active (running) since Sat 2024-03-16 03:20:16 IST; 2s ago
+  Process: 3525 ExecStart=/usr/sbin/named -u named -c ${NAMEDCONF} $OPTIONS (code=exited, status=0/SUCCESS)
+  Process: 3518 ExecStartPre=/bin/bash -c if [ ! "$DISABLE_ZONE_CHECKING" == "yes" ]; then /usr/sbin/named-checkconf -z "$NAMEDCONF"; else echo "Checking of zone files is disabled"; fi (code=exited, status=0/SUCCESS)
+ Main PID: 3526 (named)
+    Tasks: 5
+   CGroup: /system.slice/named.service
+           └─3526 /usr/sbin/named -u named -c /etc/named.conf
+
+Mar 16 03:20:16 master.sniper.com named[3526]: network unreachable resolving './DNSKEY/IN': 2001:503:c27::2:30#53
+Mar 16 03:20:16 master.sniper.com named[3526]: network unreachable resolving './NS/IN': 2001:503:c27::2:30#53
+Mar 16 03:20:16 master.sniper.com named[3526]: network unreachable resolving './DNSKEY/IN': 2001:dc3::35#53
+Mar 16 03:20:16 master.sniper.com named[3526]: network unreachable resolving './NS/IN': 2001:dc3::35#53
+Mar 16 03:20:16 master.sniper.com named[3526]: network unreachable resolving './DNSKEY/IN': 2001:500:2f::f#53
+Mar 16 03:20:16 master.sniper.com named[3526]: network unreachable resolving './NS/IN': 2001:500:2f::f#53
+Mar 16 03:20:16 master.sniper.com named[3526]: network unreachable resolving './DNSKEY/IN': 2001:500:200::b#53
+Mar 16 03:20:16 master.sniper.com named[3526]: network unreachable resolving './NS/IN': 2001:500:200::b#53
+Mar 16 03:20:16 master.sniper.com named[3526]: network unreachable resolving './DNSKEY/IN': 2001:500:a8::e#53
+Mar 16 03:20:16 master.sniper.com named[3526]: network unreachable resolving './NS/IN': 2001:500:a8::e#53
+[root@master named]# 
+
+
+[spiderman@master ~]$ nslookup sniper.com
+;; Got SERVFAIL reply from 192.168.25.151, trying next server
+;; connection timed out; no servers could be reached
+
+[spiderman@master ~]$ firewall-cmd --reload
+Authorization failed.
+    Make sure polkit agent is running or run the application as superuser.
+[spiderman@master ~]$ su-
+bash: su-: command not found...
+[spiderman@master ~]$ su -
+Password: 
+su: Authentication failure
+[spiderman@master ~]$ 
+[spiderman@master ~]$ su -
+Password: 
+Last login: Sat Mar 16 02:54:00 IST 2024 on pts/0
+Last failed login: Sat Mar 16 03:11:29 IST 2024 on pts/1
+There was 1 failed login attempt since the last successful login.
+[root@master ~]# clear
+[root@master ~]# firewall-cmd --reload
+success
+[root@master ~]# nslookup sniper.com
+;; Got SERVFAIL reply from 192.168.25.151, trying next server
+Server:		192.168.25.2
+Address:	192.168.25.2#53
+
+Non-authoritative answer:
+Name:	sniper.com
+Address: 68.183.253.161
+;; Got SERVFAIL reply from 192.168.25.151, trying next server
+
+[root@master ~]# nmtui
+[root@master ~]# systemctl restart named
+[root@master ~]# systemctl status named
+● named.service - Berkeley Internet Name Domain (DNS)
+   Loaded: loaded (/usr/lib/systemd/system/named.service; disabled; vendor preset: disabled)
+   Active: active (running) since Sat 2024-03-16 03:22:18 IST; 7s ago
+  Process: 51583 ExecStop=/bin/sh -c /usr/sbin/rndc stop > /dev/null 2>&1 || /bin/kill -TERM $MAINPID (code=exited, status=0/SUCCESS)
+  Process: 51602 ExecStart=/usr/sbin/named -u named -c ${NAMEDCONF} $OPTIONS (code=exited, status=0/SUCCESS)
+  Process: 51599 ExecStartPre=/bin/bash -c if [ ! "$DISABLE_ZONE_CHECKING" == "yes" ]; then /usr/sbin/named-checkconf -z "$NAMEDCONF"; else echo "Checking of zone files is disabled"; fi (code=exited, status=0/SUCCESS)
+ Main PID: 51604 (named)
+    Tasks: 5
+   CGroup: /system.slice/named.service
+           └─51604 /usr/sbin/named -u named -c /etc/named.conf
+
+Mar 16 03:22:18 slave.sniper.com named[51604]: zone 25.168.192.in-addr.arpa/....
+Mar 16 03:22:18 slave.sniper.com named[51604]: transfer of '25.168.192.in-ad...3
+Mar 16 03:22:18 slave.sniper.com named[51604]: zone 25.168.192.in-addr.arpa/...0
+Mar 16 03:22:18 slave.sniper.com named[51604]: transfer of '25.168.192.in-ad...s
+Mar 16 03:22:18 slave.sniper.com named[51604]: transfer of '25.168.192.in-ad...)
+Mar 16 03:22:18 slave.sniper.com named[51604]: zone sniper.com/IN: Transfer ....
+Mar 16 03:22:18 slave.sniper.com named[51604]: transfer of 'sniper.com/IN' f...4
+Mar 16 03:22:18 slave.sniper.com named[51604]: zone sniper.com/IN: transferr...0
+Mar 16 03:22:18 slave.sniper.com named[51604]: transfer of 'sniper.com/IN' f...s
+Mar 16 03:22:18 slave.sniper.com named[51604]: transfer of 'sniper.com/IN' f...)
+Hint: Some lines were ellipsized, use -l to show in full.
+[root@master ~]# nslookup sniper.com
+Server:		192.168.25.151
+Address:	192.168.25.151#53
+
+Name:	sniper.com
+Address: 192.168.25.151
+
+[root@master ~]# nslookup sniper1.com
+Server:		192.168.25.2
+Address:	192.168.25.2#53
+
+Non-authoritative answer:
+sniper1.com	canonical name = traff-5.hugedomains.com.
+traff-5.hugedomains.com	canonical name = hdr-nlb7-aebd5d615260636b.elb.us-east-1.amazonaws.com.
+Name:	hdr-nlb7-aebd5d615260636b.elb.us-east-1.amazonaws.com
+Address: 54.161.222.85
+Name:	hdr-nlb7-aebd5d615260636b.elb.us-east-1.amazonaws.com
+Address: 34.205.242.146
+^[[A^[[A
+[root@master ~]# nslookup www.google.com
+Server:		192.168.25.2
+Address:	192.168.25.2#53
+
+Non-authoritative answer:
+Name:	www.google.com
+Address: 142.250.183.4
+Name:	www.google.com
+Address: 2404:6800:4009:823::2004
+
+[root@master ~]# 
+

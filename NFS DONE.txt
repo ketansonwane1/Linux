@@ -1,0 +1,102 @@
+****ON SERVER***
+
+[user1@spiderman ~]$ su -
+Password: 
+Last login: Sun Apr  7 16:39:17 BST 2024 on pts/1
+[root@spiderman ~]# clear
+[root@spiderman ~]# yum install nfs-utils -y
+Loaded plugins: fastestmirror, langpacks
+Loading mirror speeds from cached hostfile
+ * base: centos.mirror.net.in
+ * extras: centos.mirror.net.in
+ * updates: centos.mirror.net.in
+Resolving Dependencies
+--> Running transaction check
+---> Package nfs-utils.x86_64 1:1.3.0-0.68.el7 will be updated
+---> Package nfs-utils.x86_64 1:1.3.0-0.68.el7.2 will be an update
+--> Finished Dependency Resolution
+
+Dependencies Resolved
+
+================================================================================
+ Package          Arch          Version                    Repository      Size
+================================================================================
+Updating:
+ nfs-utils        x86_64        1:1.3.0-0.68.el7.2         updates        413 k
+
+Transaction Summary
+================================================================================
+Upgrade  1 Package
+
+Total download size: 413 k
+Downloading packages:
+No Presto metadata available for updates
+nfs-utils-1.3.0-0.68.el7.2.x86_64.rpm                      | 413 kB   00:05     
+Running transaction check
+Running transaction test
+Transaction test succeeded
+Running transaction
+  Updating   : 1:nfs-utils-1.3.0-0.68.el7.2.x86_64                          1/2 
+  Cleanup    : 1:nfs-utils-1.3.0-0.68.el7.x86_64                            2/2 
+  Verifying  : 1:nfs-utils-1.3.0-0.68.el7.2.x86_64                          1/2 
+  Verifying  : 1:nfs-utils-1.3.0-0.68.el7.x86_64                            2/2 
+
+Updated:
+  nfs-utils.x86_64 1:1.3.0-0.68.el7.2                                           
+
+Complete!
+[root@spiderman ~]# mkdir /data
+[root@spiderman ~]# touch /data/secret
+[root@spiderman ~]# chmod -R 755 /data
+[root@spiderman ~]# chown nfsnobody:nfsnobody /data -R
+[root@spiderman ~]# vim /etc/exports
+	/data    192.168.1.254(rw,sync,no_root_squash)
+[root@spiderman ~]# systemctl restart nfs-server
+[root@spiderman ~]# systemctl enable nfs-server
+Created symlink from /etc/systemd/system/multi-user.target.wants/nfs-server.service to /usr/lib/systemd/system/nfs-server.service.
+[root@spiderman ~]# firewall-cmd --zone=public --add-service=nfs --permanent
+success
+[root@spiderman ~]# firewall-cmd --reload
+success
+
+****ON CLIENT****
+
+[user2@user2 ~]$ su -
+Password: 
+Last login: Sun Apr  7 16:33:44 BST 2024 on pts/0
+[root@user2 ~]# clear
+[root@user2 ~]# yum install nfs-utils -y
+Loaded plugins: fastestmirror, langpacks
+Loading mirror speeds from cached hostfile
+ * base: centos.mirror.net.in
+ * extras: centos.mirror.net.in
+ * updates: centos.mirror.net.in
+Resolving Dependencies
+
+[root@user2 ~]# mount -t nfs
+[root@user2 ~]# mount -t nfs 192.168.25.128:/data /mnt
+[root@user2 ~]# df -h
+Filesystem            Size  Used Avail Use% Mounted on
+devtmpfs              1.8G     0  1.8G   0% /dev
+tmpfs                 1.8G     0  1.8G   0% /dev/shm
+tmpfs                 1.8G   13M  1.8G   1% /run
+tmpfs                 1.8G     0  1.8G   0% /sys/fs/cgroup
+/dev/sda3              29G  4.3G   25G  16% /
+/dev/sda1             3.9G  180M  3.8G   5% /boot
+tmpfs                 368M   48K  368M   1% /run/user/1000
+192.168.25.128:/data   29G  4.2G   25G  15% /mnt
+[root@user2 ~]# umount /mnt
+[root@user2 ~]# vim /etc/fstab
+[root@user2 ~]# mount -a
+[root@user2 ~]# df -h
+Filesystem            Size  Used Avail Use% Mounted on
+devtmpfs              1.8G     0  1.8G   0% /dev
+tmpfs                 1.8G     0  1.8G   0% /dev/shm
+tmpfs                 1.8G   13M  1.8G   1% /run
+tmpfs                 1.8G     0  1.8G   0% /sys/fs/cgroup
+/dev/sda3              29G  4.3G   25G  16% /
+/dev/sda1             3.9G  180M  3.8G   5% /boot
+tmpfs                 368M   52K  368M   1% /run/user/1000
+192.168.25.128:/data   29G  4.2G   25G  15% /mnt
+[root@user2 ~]# 
+

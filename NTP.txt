@@ -1,0 +1,147 @@
+NTP (Network Time Protocol) Server
+```````````````````````````````````
+Port: 123 UDP
+
+It allows computers to synchronize time over networks for an accurate time.
+
+1) # yum install chrony*
+
+2) Goto https://www.pool.ntp.org/zone/in
+
+	   server 0.in.pool.ntp.org
+	   server 1.in.pool.ntp.org
+	   server 2.in.pool.ntp.org
+	   server 3.in.pool.ntp.org
+
+3) Configuration file:
+
+# vim /etc/chrony.conf 
+server 0.in.pool.ntp.org iburst
+server 1.in.pool.ntp.org iburst
+server 2.in.pool.ntp.org iburst
+server 3.in.pool.ntp.org iburst
+
+[iburst: To check instant update]
+
+allow 192.168.1.0/24
+
+:wq
+
+# systemctl start chronyd
+# systemctl enable chronyd
+
+
+
+
+
+
+
+
+7) Check the sources & clients
+
+# chronyc sources
+# chronyc clients
+
+ 
+
+
+
+++++++++++++++++++++++++++++++++++++++
+Configure NTP clients to access your NTP Server:
+````````````````````````````````````````````````
+# timedatectl set-timezone Asia/Kolkata
+
+# vim /etc/chrony.conf
+
+Comment existing NTP POOLS, and add
+server 192.168.1.254 prefer
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Verify/Set date and time:
+# timedatectl list-timezones
+# timedatectl list-timezones | grep -i "Asia/kol"
+# timedatectl set-timezone Asia/Kolkata
+
+
+
+
+
+

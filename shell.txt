@@ -1,0 +1,131 @@
+BASH Scripting:
+---------------
+Scripting -> We can execute multiple objects(cmds) by using a single object (file). 
+
+# cat > first.sh
+line 1	#!/bin/bash
+	cmd1
+	cmd2
+	cmd3
+	cmd4
+
+#chmod +x first.sh
+#bash first.sh
+	OR
+#./first.sh
+---------------
+Variables:
+----------
+a=2
+echo $a
+~~~~~~~~~~
+read -p "Enter value:" a
+echo "Print $a"
+~~~~~~~~~~
+a=$(cmd)
+echo $a
+---------------
+ARITHMETIC
+----------
+$((Expression))
+$((2 + 2))
+~~~~~~~~~~
+read -p "Enter 1st num: " a
+read -p "Enter 2nd num: " b
+
+echo Total : $(( $a + $b ))
+~~~~~~~~~~
+x=99
+y=11
+expr $x + $y
+~~~~~~~~~~
+x=99
+y=11
+
+expr $x \* $y
+
+[ \ -> To avoid ]
+-------------------
+Positional Parameter
+-------------------
+#set Naba is the NASA HTML hacker
+
+# echo $1
+Naba
+# echo $2
+is
+
+# echo $#
+6
+~~~~~~~~~~~~~~~~~
+# cat > foo.txt
+this is the last session
+# set `cat foo.txt`
+# echo $#
+5
+--------------------
+Conditions
+--------------------
+1) if...then...fi
+2) if...then...else...fi
+3) if...then...elif...then...fi
+4) if...then...elif...then...else...fi
+
+1) if...then...fi
+------------------
+echo "Hello folks..!!!"
+read -p "Type-(1): " a
+
+if [ "$a" -eq "1" ]; then
+echo "Tumne kr dikhaya!!!";
+fi
+
+2) if...then...else...fi
+-------------------------
+if [ "$a" -eq "1" ]; then
+echo "Tumne kr dikhaya!!!";
+else
+echo "Tumse na ho payega !";
+fi
+
+3) if...then...elif...then...fi
+-------------------------------
+if [ "$a" -eq "1" ]; then
+echo "Tumne kr dikhaya!!!";
+elif [ "$a" -eq "2" ]; then
+echo "sab kr rhe hai aajkal !";
+fi
+
+4) if...then...elif...then...else...fi
+---------------------------------------
+if [ "$a" -eq "1" ]; then
+echo "Tumne kr dikhaya!!!";
+elif [ "$a" -eq "2" ]; then
+echo "sab kr rhe hai aajkal !";
+else
+echo "Tumse na ho payega !";
+fi
+---------------------------------------
+EXIT CODE
+
+# echo $?
+0 [success]
+# echo $?
+2 [failed]
+=======================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
